@@ -1,0 +1,18 @@
+version: 2
+
+sources:
+  # - name: tlc_data_raw
+  #   database: hive
+  #   schema: tlc_data_raw
+  #   tables:
+  #     - name: hire_vehicle_trip
+  #     - name: green_taxi_trip
+  #     - name: yellow_taxi_trip
+
+  - name: minio
+    meta:
+      external_location: "s3://tlc-data-raw/{name}/**/*.parquet"
+    tables:
+      - name: green-taxi-trip-records
+      - name: yellow-taxi-trip-records
+      - name: for-hire-vehicle-trip-records
