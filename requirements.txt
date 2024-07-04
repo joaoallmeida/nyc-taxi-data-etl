@@ -1,8 +1,0 @@
-beautifulsoup4==4.12.3
-dagster==1.6.9
-dbt-trino==1.7.1
-polars==0.19.8
-polars-lts-cpu==0.19.8
-pydantic==2.6.3
-python-dotenv==1.0.1
-s3fs==2024.2.0

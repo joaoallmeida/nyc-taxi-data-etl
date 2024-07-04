@@ -1,14 +1,3 @@
-{{
-  config(
-    options={
-      "partition_by":"year_ref",
-      "overwrite_or_ignore": True
-    },
-    format='parquet',
-    location='s3://tlc-data-refined/yellow_trips'
-  )
-}}
-
 SELECT
     CASE
       WHEN vendorid = 1 THEN 'Creative Mobile Technologies'
@@ -54,6 +43,6 @@ SELECT
     COALESCE(congestion_surcharge,0) AS congestion_surcharge,
     -- airport_fe,
     YEAR(tpep_pickup_datetime) AS year_ref
-FROM {{ source('minio','yellow-taxi-trip-records') }}
+FROM {{ source('main','raw_yellow_taxi_trip_records') }}
 WHERE 1=1
-  AND YEAR(tpep_pickup_datetime) = 2023
+  AND YEAR(tpep_pickup_datetime) >= 2020

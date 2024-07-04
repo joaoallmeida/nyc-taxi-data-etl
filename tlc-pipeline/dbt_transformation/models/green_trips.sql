@@ -1,14 +1,3 @@
-{{
-  config(
-    options={
-      "partition_by":"year_ref",
-      "overwrite_or_ignore": True
-    },
-    format='parquet',
-    location='s3://tlc-data-refined/green_trips'
-  )
-}}
-
 SELECT
       CASE
         WHEN vendorid = 1 THEN 'Creative Mobile Technologies'
@@ -57,6 +46,6 @@ SELECT
       END AS trip_type
     , COALESCE(congestion_surcharge,0) AS congestion_surcharge
     ,year(lpep_pickup_datetime) as year_ref
-FROM {{ source('minio','green-taxi-trip-records') }}
+FROM {{ source('main','raw_green_taxi_trip_records') }}
 WHERE 1=1
-  AND YEAR(lpep_pickup_datetime) >= 2021
+  AND YEAR(lpep_pickup_datetime) >= 2020
