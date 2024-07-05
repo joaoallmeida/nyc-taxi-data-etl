@@ -1,0 +1,12 @@
+version: 2
+
+models:
+  - name: green_trips
+    description: Green taxis, also known as boro taxis and street-hail liveries, were introduced in August of 2013 to improve taxi service and availability in the borough.
+
+  - name: yellow_trips
+    description: Yellow taxis are traditionally hailed by signaling to a driver who is on duty and seeking a passenger.
+
+  - name: fhv_trips
+    description: FHV data includes trip data from high-volume for-hire vehicle bases, community livery bases, luxury limousine bases, and black car bases.
+

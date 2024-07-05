@@ -1,6 +1,12 @@
 version: 2
 
 sources:
+  - name: main
+    tables:
+      - name: raw_green_taxi_trip_records
+      - name: raw_yellow_taxi_trip_records
+      - name: raw_for_hire_vehicle_trip_records
+
   # - name: minio
   #   meta:
   #     external_location: "s3://tlc/raw/{name}/**/*.parquet"
@@ -8,8 +14,3 @@ sources:
   #     - name: green-taxi-trip-records
   #     - name: yellow-taxi-trip-records
   #     - name: for-hire-vehicle-trip-records
-  - name: main
-    tables:
-      - name: raw_green_taxi_trip_records
-      - name: raw_yellow_taxi_trip_records
-      - name: raw_for_hire_vehicle_trip_records
