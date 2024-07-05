@@ -1,6 +1,7 @@
 from string import Template
 from dagster import ConfigurableResource
 from sqlescapy import sqlescape
+from duckdb import DuckDBPyConnection
 import duckdb
 import os
 
@@ -10,8 +11,11 @@ class SQL:
         self.options = options
 
 class DuckDB(ConfigurableResource):
+    """
+        A personal resource used to help in duckdb sql statements executions.
+    """
 
-    def duckConn(self) -> duckdb.DuckDBPyConnection:
+    def duckConn(self) -> DuckDBPyConnection:
         conn = duckdb.connect("/tmp/duckdb.db")
         conn.install_extension('httpfs')
         conn.load_extension('httpfs')
@@ -28,26 +32,25 @@ class DuckDB(ConfigurableResource):
             SET memory_limit = '10GB';
             SET threads TO 12;
         """)
+
+        conn.query("CREATE SCHEMA IF NOT EXISTS bronze;")
+
         return conn
 
-
-    def executeQuery(self, duckConn: duckdb.DuckDBPyConnection , query:SQL):
+    def executeQuery(self, duckConn: DuckDBPyConnection , query:SQL):
         result = duckConn.query(self.sql_to_string(query))
         if result is None:
             return
-        return result.fetchall()
+        return result.df()
 
-    def count_data(self, table:str) -> SQL:
-        return SQL(f"SELECT COUNT(*) FROM $table", table=table)
+    def copy_to_minio(self, schema:str, table:str, minioPath:str ) -> SQL:
+        return SQL(f"COPY $schema.$table TO '$minioPath' (FORMAT PARQUET, OVERWRITE_OR_IGNORE true, COMPRESSION 'zstd', ROW_GROUP_SIZE 1000000)", schema=schema, table=table, minioPath=minioPath)
 
-    def copy_to_minio(self, table:str, minioPath:str ) -> SQL:
-        return SQL(f"COPY $table TO '$minioPath' (FORMAT PARQUET, OVERWRITE_OR_IGNORE true, COMPRESSION 'zstd', ROW_GROUP_SIZE 1000000)", table=table, minioPath=minioPath)
+    def create_table(self, schema:str, table:str, downloadUrl:list) -> SQL:
+        return SQL(f"CREATE TABLE IF NOT EXISTS $schema.$table AS SELECT * FROM read_parquet($downloadUrl)", schema=schema, table=table, downloadUrl=downloadUrl)
 
-    def create_table(self, table:str, downloadUrl:list) -> SQL:
-        return SQL(f"CREATE TABLE IF NOT EXISTS $table AS SELECT * FROM read_parquet($downloadUrl)", table=table, downloadUrl=downloadUrl)
-
-    def drop_table(self, table:str) -> SQL:
-        return f"DROP TABLE IF EXISTS {table}"
+    def drop_table(self, schema:str, table:str) -> SQL:
+        return SQL("DROP TABLE IF EXISTS $schema.$table", schema=schema, table=table,)
 
     def get_metadata(self, table:str) -> SQL:
         return SQL(f"SELECT * FROM duckdb_tables() WHERE table_name = '$table'", table=table)

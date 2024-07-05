@@ -41,8 +41,8 @@ SELECT
     improvement_surcharge,
     total_amount,
     COALESCE(congestion_surcharge,0) AS congestion_surcharge,
-    -- airport_fe,
+    airport_fee,
     YEAR(tpep_pickup_datetime) AS year_ref
-FROM {{ source('main','raw_yellow_taxi_trip_records') }}
+FROM {{ source('bronze','raw_yellow_taxi_trip_records') }}
 WHERE 1=1
   AND YEAR(tpep_pickup_datetime) >= 2020

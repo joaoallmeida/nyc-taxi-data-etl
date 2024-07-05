@@ -5,6 +5,7 @@ dbt_transformation:
       type: duckdb
       path: '/tmp/duckdb.db'
       threads: 10
+      schema: silver
       extensions:
         - httpfs
         - parquet

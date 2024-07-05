@@ -1,11 +1,11 @@
 version: 2
 
 sources:
-  - name: main
+  - name: bronze
     tables:
       - name: raw_green_taxi_trip_records
       - name: raw_yellow_taxi_trip_records
-      - name: raw_for_hire_vehicle_trip_records
+      - name: raw_fhv_trip_records
 
   # - name: minio
   #   meta:

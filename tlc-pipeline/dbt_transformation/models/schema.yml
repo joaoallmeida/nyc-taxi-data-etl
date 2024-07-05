@@ -3,10 +3,150 @@ version: 2
 models:
   - name: green_trips
     description: Green taxis, also known as boro taxis and street-hail liveries, were introduced in August of 2013 to improve taxi service and availability in the borough.
+    columns:
+      - name: VendorID
+        data_type: INTEGER
+        description: A code indicating the LPEP provider that provided the record.
+      - name: lpep_pickup_datetime
+        data_type: TIMESTAMP
+        description: The date and time when the meter was engaged.
+      - name: lpep_dropoff_datetime
+        data_type: TIMESTAMP
+        description: The date and time when the meter was disengaged.
+      - name: Passenger_count
+        data_type: BIGINT
+        description: The number of passengers in the vehicle. This is a driver-entered value.
+      - name: Trip_distance
+        data_type: DOUBLE
+        description: The elapsed trip distance in miles reported by the taximeter.
+      - name: PULocationID
+        data_type: INTEGER
+        description: TLC Taxi Zone in which the taximeter was engaged
+      - name: DOLocationID
+        data_type: INTEGER
+        description: TLC Taxi Zone in which the taximeter was disengaged
+      - name: RateCodeID
+        data_type: BIGINT
+        description: The final rate code in effect at the end of the trip.
+      - name: Store_and_fwd_flag
+        data_type: VARCHAR
+        description: This flag indicates whether the trip record was held in vehicle memory before sending to the vendor, aka “store and forward,” because the vehicle did not have a connection to the server.
+      - name: Payment_type
+        data_type: BIGINT
+        description: A numeric code signifying how the passenger paid for the trip.
+      - name: Fare_amount
+        data_type: DOUBLE
+        description: The time-and-distance fare calculated by the meter.
+      - name: Extra
+        data_type: DOUBLE
+        description: Miscellaneous extras and surcharges.  Currently, this only includes the $0.50 and $1 rush hour and overnight charges.
+      - name: MTA_tax
+        data_type: DOUBLE
+        description: $0.50 MTA tax that is automatically triggered based on the metered rate in use.
+      - name: Improvement_surcharge
+        data_type: DOUBLE
+        description: $0.30 improvement surcharge assessed on hailed trips at the flag drop. The improvement surcharge began being levied in 2015.
+      - name: Tip_amount
+        data_type: DOUBLE
+        description: Tip amount – This field is automatically populated for credit card tips. Cash tips are not included.
+      - name: Tolls_amount
+        data_type: DOUBLE
+        description: Total amount of all tolls paid in trip.
+      - name: Total_amount
+        data_type: DOUBLE
+        description: The total amount charged to passengers. Does not include cash tips.
+      - name: Congestion_Surcharge
+        data_type: DOUBLE
+        description: Total amount collected in trip for NYS congestion surcharge.
+      - name: Trip_type
+        data_type: BIGINT
+        description: Type of triping.
+      - name: Ehail_fee
+        data_type: BIGINT
+        description: N/D
 
   - name: yellow_trips
     description: Yellow taxis are traditionally hailed by signaling to a driver who is on duty and seeking a passenger.
+    columns:
+      - name: VendorID
+        data_type: INTEGER
+        description: A code indicating the TPEP provider that provided the record.
+      - name: tpep_pickup_datetime
+        data_type: TIMESTAMP
+        description: The date and time when the meter was engaged.
+      - name: tpep_dropoff_datetime
+        data_type: TIMESTAMP
+        description: The date and time when the meter was disengaged.
+      - name: Passenger_count
+        data_type: BIGINT
+        description: The number of passengers in the vehicle. This is a driver-entered value.
+      - name: Trip_distance
+        data_type: DOUBLE
+        description: The elapsed trip distance in miles reported by the taximeter.
+      - name: PULocationID
+        data_type: INTEGER
+        description: TLC Taxi Zone in which the taximeter was engaged
+      - name: DOLocationID
+        data_type: INTEGER
+        description: TLC Taxi Zone in which the taximeter was disengaged
+      - name: RateCodeID
+        data_type: BIGINT
+        description: The final rate code in effect at the end of the trip.
+      - name: Store_and_fwd_flag
+        data_type: VARCHAR
+        description: This flag indicates whether the trip record was held in vehicle memory before sending to the vendor, aka “store and forward,” because the vehicle did not have a connection to the server.
+      - name: Payment_type
+        data_type: BIGINT
+        description: A numeric code signifying how the passenger paid for the trip.
+      - name: Fare_amount
+        data_type: DOUBLE
+        description: The time-and-distance fare calculated by the meter.
+      - name: Extra
+        data_type: DOUBLE
+        description: Miscellaneous extras and surcharges. Currently, this only includes the $0.50 and $1 rush hour and overnight charges.
+      - name: MTA_tax
+        data_type: DOUBLE
+        description: $0.50 MTA tax that is automatically triggered based on the metered rate in use.
+      - name: Improvement_surcharge
+        data_type: DOUBLE
+        description: $0.30 improvement surcharge assessed trips at the flag drop. The improvement surcharge began being levied in 2015.
+      - name: Tip_amount
+        data_type: DOUBLE
+        description: Tip amount – This field is automatically populated for credit card tips. Cash tips are not included.
+      - name: Tolls_amount
+        data_type: DOUBLE
+        description: Total amount of all tolls paid in trip.
+      - name: Total_amount
+        data_type: DOUBLE
+        description: The total amount charged to passengers. Does not include cash tips.
+      - name: Congestion_Surcharge
+        data_type: DOUBLE
+        description: Total amount collected in trip for NYS congestion surcharge.
+      - name: Airport_fee
+        data_type: DOUBLE
+        description: $1.25 for pick up only at LaGuardia and John F. Kennedy Airports.
 
   - name: fhv_trips
     description: FHV data includes trip data from high-volume for-hire vehicle bases, community livery bases, luxury limousine bases, and black car bases.
-
+    columns:
+      - name: Dispatching_base_num
+        data_type: VARCHAR
+        description: The TLC Base License Number of the base that dispatched the trip
+      - name: Pickup_datetime
+        data_type: TIMESTAMP
+        description: The date and time of the trip pick-up
+      - name: DropOff_datetime
+        data_type: TIMESTAMP
+        description: The date and time of the trip dropoff
+      - name: PULocationID
+        data_type: BIGINT
+        description: TLC Taxi Zone in which the trip began
+      - name: DOLocationID
+        data_type: BIGINT
+        description: TLC Taxi Zone in which the trip ended
+      - name: SR_Flag
+        data_type: BIGINT
+        description: Indicates if the trip was a part of a shared ride chain offered by a High Volume FHV company.
+      - name: Affiliated_base_number
+        data_type: VARCHAR
+        description: N/D

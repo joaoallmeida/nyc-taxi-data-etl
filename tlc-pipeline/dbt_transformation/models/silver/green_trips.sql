@@ -30,6 +30,7 @@ SELECT
     , tolls_amount
     , improvement_surcharge
     , total_amount
+    , ehail_fee
     , CASE
         WHEN payment_type = 1 THEN 'CREDIT CARD'
         WHEN payment_type = 2 THEN 'CASH'
@@ -46,6 +47,6 @@ SELECT
       END AS trip_type
     , COALESCE(congestion_surcharge,0) AS congestion_surcharge
     ,year(lpep_pickup_datetime) as year_ref
-FROM {{ source('main','raw_green_taxi_trip_records') }}
+FROM {{ source('bronze','raw_green_taxi_trip_records') }}
 WHERE 1=1
   AND YEAR(lpep_pickup_datetime) >= 2020

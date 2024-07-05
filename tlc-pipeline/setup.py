@@ -8,12 +8,12 @@ setup(
         "dagster-cloud",
         "dagster-duckdb",
         "dagster-dbt",
-        # "dagster-embedded-elt",
         "dbt-duckdb",
         "duckdb",
         "beautifulsoup4",
         "s3fs",
-        "sqlescapy"
+        "sqlescapy",
+        "pandas"
     ],
     extras_require={"dev": ["dagster-webserver", "pytest"]},
 )

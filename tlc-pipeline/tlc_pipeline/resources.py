@@ -1,10 +1,12 @@
-from typing import List
 from dagster_dbt import DbtCliResource, DagsterDbtTranslator
 from dagster import file_relative_path, AssetKey
-from dagster import AssetExecutionContext
 from pathlib import Path
 from bs4 import BeautifulSoup
+from duckdb import DuckDBPyConnection
+import duckdb
+from tlc_pipeline.duckUtilsResource import DuckDB
 import requests
+import pandas as pd
 
 
 # DBT Resource
@@ -23,10 +25,13 @@ class CustomDagsterDbtTranslator(DagsterDbtTranslator):
         return AssetKey(dbt_resource_props["name"])
 
     def get_group_name(cls, dbt_resource_props) -> str:
-        return "refined"
+        return "Silver"
 
 # Ingestion Resource
 class Ingestion:
+    def __init__(self, duckConn: DuckDBPyConnection, duckdb: DuckDB ) -> None:
+        self.duckConn = duckConn
+        self.duckUtils = duckdb
 
     def __get_url_source_data__(self, source_name:str) -> list[dict]:
         try:
@@ -37,15 +42,16 @@ class Ingestion:
             raise e
         return records
 
-    def get_raw_data(self, source:str, year_range:dict) -> List:
+    def get_raw_data(self, source:str, tbName:str , yearRange:dict) -> pd.DataFrame:
         listUrl = self.__get_url_source_data__(source)
-        parquets = list()
-        
+        parquetsUrl = list()
+
         for url in listUrl:
             year = int(url.split('_')[-1].split('-')[0])
-            # fileName = url.split('/')[-1].replace('-','_')
-            # tbName = fileName.split('.')[0]
-            if year in [year for year in range(year_range["from"], year_range["to"] + 1)]:
-                parquets.append(url)
+            if year in [year for year in range(yearRange["from"], yearRange["to"] + 1)]:
+                parquetsUrl.append(url)
 
-        return parquets
+        self.duckUtils.executeQuery(self.duckConn, self.duckUtils.create_table(schema="bronze" ,table=tbName, downloadUrl=parquetsUrl))
+        meta = self.duckUtils.executeQuery(self.duckConn, self.duckUtils.get_metadata(table=tbName))
+
+        return meta
