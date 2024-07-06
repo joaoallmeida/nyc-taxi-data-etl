@@ -163,3 +163,5 @@ cython_debug/
 logs
 *tmp*
 *duckdb*
+test*
+Test*

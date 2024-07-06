@@ -4,7 +4,7 @@ from pathlib import Path
 from bs4 import BeautifulSoup
 from duckdb import DuckDBPyConnection
 import duckdb
-from tlc_pipeline.duckUtilsResource import DuckDB
+from pipeline.duckUtilsResource import DuckDB
 import requests
 import pandas as pd
 

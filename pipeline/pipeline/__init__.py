@@ -1,8 +1,8 @@
 from dagster import Definitions
 from dagster import define_asset_job, load_assets_from_modules, file_relative_path
 
-from tlc_pipeline import assets, resources
-from tlc_pipeline.duckUtilsResource import DuckDB
+from pipeline import assets, resources
+from pipeline.duckUtilsResource import DuckDB
 
 all_assets = load_assets_from_modules([assets])
 

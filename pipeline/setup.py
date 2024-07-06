@@ -1,8 +1,8 @@
 from setuptools import find_packages, setup
 
 setup(
-    name="tlc_pipeline",
-    packages=find_packages(exclude=["tlc_pipeline_tests"]),
+    name="pipeline",
+    packages=find_packages(exclude=["pipeline_tests"]),
     install_requires=[
         "dagster",
         "dagster-cloud",

@@ -2,9 +2,9 @@ from dagster import AssetExecutionContext, RetryPolicy, Backoff
 from dagster import asset
 from dagster_dbt import dbt_assets, DbtCliResource
 
-from tlc_pipeline.duckUtilsResource import DuckDB
-from tlc_pipeline.resources import Ingestion
-from tlc_pipeline.resources import dbtManifest, CustomDagsterDbtTranslator
+from pipeline.duckUtilsResource import DuckDB
+from pipeline.resources import Ingestion
+from pipeline.resources import dbtManifest, CustomDagsterDbtTranslator
 
 import time
 import os
