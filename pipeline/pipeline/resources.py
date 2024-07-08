@@ -51,7 +51,7 @@ class Ingestion:
             if year in [year for year in range(yearRange["from"], yearRange["to"] + 1)]:
                 parquetsUrl.append(url)
 
-        self.duckUtils.executeQuery(self.duckConn, self.duckUtils.create_table(schema="bronze" ,table=tbName, downloadUrl=parquetsUrl))
+        self.duckUtils.executeQuery(self.duckConn, self.duckUtils.create_table_parquet(schema="bronze" ,table=tbName, downloadUrl=parquetsUrl))
         meta = self.duckUtils.executeQuery(self.duckConn, self.duckUtils.get_metadata(table=tbName))
 
         return meta

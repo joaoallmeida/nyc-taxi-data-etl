@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: green_trips
+  - name: fat_green_trips
     description: Green taxis, also known as boro taxis and street-hail liveries, were introduced in August of 2013 to improve taxi service and availability in the borough.
     columns:
       - name: VendorID
@@ -64,8 +64,11 @@ models:
       - name: Ehail_fee
         data_type: BIGINT
         description: N/D
+      - name: created_at
+        data_type: TIMESTAMP
+        description: Day and time of table creation.
 
-  - name: yellow_trips
+  - name: fat_yellow_trips
     description: Yellow taxis are traditionally hailed by signaling to a driver who is on duty and seeking a passenger.
     columns:
       - name: VendorID
@@ -125,8 +128,11 @@ models:
       - name: Airport_fee
         data_type: DOUBLE
         description: $1.25 for pick up only at LaGuardia and John F. Kennedy Airports.
+      - name: created_at
+        data_type: TIMESTAMP
+        description: Day and time of table creation.
 
-  - name: fhv_trips
+  - name: fat_fhv_trips
     description: FHV data includes trip data from high-volume for-hire vehicle bases, community livery bases, luxury limousine bases, and black car bases.
     columns:
       - name: Dispatching_base_num
@@ -150,3 +156,46 @@ models:
       - name: Affiliated_base_number
         data_type: VARCHAR
         description: N/D
+      - name: created_at
+        data_type: TIMESTAMP
+        description: Day and time of table creation.
+
+  - name: dim_payments
+    description: Payment type table.
+    columns:
+      - name: payment
+        data_type: VARCHAR
+        description: The passenger paid type for the trip.
+      - name: created_at
+        data_type: TIMESTAMP
+        description: Day and time of table creation.
+
+  - name: dim_rates
+    description: Rate type table.
+    columns:
+      - name: rate
+        data_type: VARCHAR
+        description: The final rate name in effect at the end of the trip.
+      - name: created_at
+        data_type: TIMESTAMP
+        description: Day and time of table creation.
+
+  - name: dim_trips
+    description: Trip type table.
+    columns:
+      - name: trip
+        data_type: VARCHAR
+        description: Type of triping.
+      - name: created_at
+        data_type: TIMESTAMP
+        description: Day and time of table creation.
+
+  - name: dim_vendors
+    description: Payment types table.
+    columns:
+      - name: vendor
+        data_type: VARCHAR
+        description: The LPEP provider that provided the record.
+      - name: created_at
+        data_type: TIMESTAMP
+        description: Day and time of table creation.

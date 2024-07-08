@@ -1,0 +1,24 @@
+version: 2
+
+sources:
+  # - name: bronze
+  #   tables:
+  #     - name: raw_green_taxi_trip_records
+  #     - name: raw_yellow_taxi_trip_records
+  #     - name: raw_fhv_trip_records
+  #     - name: raw_payments
+  #     - name: raw_rates
+  #     - name: raw_trips
+  #     - name: raw_vendors
+
+  - name: bronze
+    meta:
+      external_location: "s3://tlc/bronze/{name}/*.parquet"
+    tables:
+      - name: raw_green_taxi_trip_records
+      - name: raw_yellow_taxi_trip_records
+      - name: raw_fhv_trip_records
+      - name: raw_payments
+      - name: raw_rates
+      - name: raw_trips
+      - name: raw_vendors
