@@ -1,201 +1,190 @@
 version: 2
 
 models:
-  - name: fat_green_trips
-    description: Green taxis, also known as boro taxis and street-hail liveries, were introduced in August of 2013 to improve taxi service and availability in the borough.
+  - name: fat_trips
+    description: Yellow and Green taxis are traditionally hailed by signaling to a driver who is on duty and seeking a passenger.
     columns:
-      - name: VendorID
+      - name: fat_key
         data_type: INTEGER
-        description: A code indicating the LPEP provider that provided the record.
-      - name: lpep_pickup_datetime
+        description: Fat surrogate key.
+        test:
+          - unique
+          - not_null
+      - name: vendor_key
+        data_type: INTEGER
+        description: A surrogate code indicating the TPEP provider that provided the record.
+        test:
+          - unique
+          - not_null
+      - name: pickup_datetime
         data_type: TIMESTAMP
         description: The date and time when the meter was engaged.
-      - name: lpep_dropoff_datetime
+      - name: dropoff_datetime
         data_type: TIMESTAMP
         description: The date and time when the meter was disengaged.
-      - name: Passenger_count
+      - name: passenger_count
         data_type: BIGINT
         description: The number of passengers in the vehicle. This is a driver-entered value.
-      - name: Trip_distance
+      - name: trip_distance
         data_type: DOUBLE
         description: The elapsed trip distance in miles reported by the taximeter.
-      - name: PULocationID
+      - name: trip_distance_km
+        data_type: DOUBLE
+        description: The elapsed trip distance in kilometers reported by the taximeter.
+      - name: pulocation_key
         data_type: INTEGER
         description: TLC Taxi Zone in which the taximeter was engaged
-      - name: DOLocationID
+      - name: dolocation_key
         data_type: INTEGER
         description: TLC Taxi Zone in which the taximeter was disengaged
-      - name: RateCodeID
+      - name: ratecode_key
         data_type: BIGINT
-        description: The final rate code in effect at the end of the trip.
-      - name: Store_and_fwd_flag
-        data_type: VARCHAR
-        description: This flag indicates whether the trip record was held in vehicle memory before sending to the vendor, aka “store and forward,” because the vehicle did not have a connection to the server.
-      - name: Payment_type
-        data_type: BIGINT
-        description: A numeric code signifying how the passenger paid for the trip.
-      - name: Fare_amount
+        description: The surrogate rate code in effect at the end of the trip.
+        test:
+          - unique
+          - not_null
+      - name: payment_key
+        data_type: INTEGER
+        description: A surrogate code signifying how the passenger paid for the trip.
+        test:
+          - unique
+          - not_null
+      - name: service_key
+        data_type: INTEGER
+        description: Surrogate for green or yellow taxi service.
+        test:
+          - unique
+          - not_null
+      - name: fare_amount
         data_type: DOUBLE
         description: The time-and-distance fare calculated by the meter.
-      - name: Extra
-        data_type: DOUBLE
-        description: Miscellaneous extras and surcharges.  Currently, this only includes the $0.50 and $1 rush hour and overnight charges.
-      - name: MTA_tax
-        data_type: DOUBLE
-        description: $0.50 MTA tax that is automatically triggered based on the metered rate in use.
-      - name: Improvement_surcharge
-        data_type: DOUBLE
-        description: $0.30 improvement surcharge assessed on hailed trips at the flag drop. The improvement surcharge began being levied in 2015.
-      - name: Tip_amount
-        data_type: DOUBLE
-        description: Tip amount – This field is automatically populated for credit card tips. Cash tips are not included.
-      - name: Tolls_amount
-        data_type: DOUBLE
-        description: Total amount of all tolls paid in trip.
-      - name: Total_amount
-        data_type: DOUBLE
-        description: The total amount charged to passengers. Does not include cash tips.
-      - name: Congestion_Surcharge
-        data_type: DOUBLE
-        description: Total amount collected in trip for NYS congestion surcharge.
-      - name: Trip_type
-        data_type: BIGINT
-        description: Type of triping.
-      - name: Ehail_fee
-        data_type: BIGINT
-        description: N/D
-      - name: created_at
-        data_type: TIMESTAMP
-        description: Day and time of table creation.
-
-  - name: fat_yellow_trips
-    description: Yellow taxis are traditionally hailed by signaling to a driver who is on duty and seeking a passenger.
-    columns:
-      - name: VendorID
-        data_type: INTEGER
-        description: A code indicating the TPEP provider that provided the record.
-      - name: tpep_pickup_datetime
-        data_type: TIMESTAMP
-        description: The date and time when the meter was engaged.
-      - name: tpep_dropoff_datetime
-        data_type: TIMESTAMP
-        description: The date and time when the meter was disengaged.
-      - name: Passenger_count
-        data_type: BIGINT
-        description: The number of passengers in the vehicle. This is a driver-entered value.
-      - name: Trip_distance
-        data_type: DOUBLE
-        description: The elapsed trip distance in miles reported by the taximeter.
-      - name: PULocationID
-        data_type: INTEGER
-        description: TLC Taxi Zone in which the taximeter was engaged
-      - name: DOLocationID
-        data_type: INTEGER
-        description: TLC Taxi Zone in which the taximeter was disengaged
-      - name: RateCodeID
-        data_type: BIGINT
-        description: The final rate code in effect at the end of the trip.
-      - name: Store_and_fwd_flag
-        data_type: VARCHAR
-        description: This flag indicates whether the trip record was held in vehicle memory before sending to the vendor, aka “store and forward,” because the vehicle did not have a connection to the server.
-      - name: Payment_type
-        data_type: BIGINT
-        description: A numeric code signifying how the passenger paid for the trip.
-      - name: Fare_amount
-        data_type: DOUBLE
-        description: The time-and-distance fare calculated by the meter.
-      - name: Extra
+      - name: extra
         data_type: DOUBLE
         description: Miscellaneous extras and surcharges. Currently, this only includes the $0.50 and $1 rush hour and overnight charges.
-      - name: MTA_tax
+      - name: mta_tax
         data_type: DOUBLE
         description: $0.50 MTA tax that is automatically triggered based on the metered rate in use.
-      - name: Improvement_surcharge
+      - name: improvement_surcharge
         data_type: DOUBLE
         description: $0.30 improvement surcharge assessed trips at the flag drop. The improvement surcharge began being levied in 2015.
-      - name: Tip_amount
+      - name: tip_amount
         data_type: DOUBLE
         description: Tip amount – This field is automatically populated for credit card tips. Cash tips are not included.
-      - name: Tolls_amount
+      - name: tolls_amount
         data_type: DOUBLE
         description: Total amount of all tolls paid in trip.
-      - name: Total_amount
+      - name: total_amount
         data_type: DOUBLE
         description: The total amount charged to passengers. Does not include cash tips.
-      - name: Congestion_Surcharge
+      - name: congestion_surcharge
         data_type: DOUBLE
         description: Total amount collected in trip for NYS congestion surcharge.
-      - name: Airport_fee
+      - name: fee
         data_type: DOUBLE
         description: $1.25 for pick up only at LaGuardia and John F. Kennedy Airports.
-      - name: created_at
-        data_type: TIMESTAMP
-        description: Day and time of table creation.
-
-  - name: fat_fhv_trips
-    description: FHV data includes trip data from high-volume for-hire vehicle bases, community livery bases, luxury limousine bases, and black car bases.
-    columns:
-      - name: Dispatching_base_num
-        data_type: VARCHAR
-        description: The TLC Base License Number of the base that dispatched the trip
-      - name: Pickup_datetime
-        data_type: TIMESTAMP
-        description: The date and time of the trip pick-up
-      - name: DropOff_datetime
-        data_type: TIMESTAMP
-        description: The date and time of the trip dropoff
-      - name: PULocationID
-        data_type: BIGINT
-        description: TLC Taxi Zone in which the trip began
-      - name: DOLocationID
-        data_type: BIGINT
-        description: TLC Taxi Zone in which the trip ended
-      - name: SR_Flag
-        data_type: BIGINT
-        description: Indicates if the trip was a part of a shared ride chain offered by a High Volume FHV company.
-      - name: Affiliated_base_number
-        data_type: VARCHAR
-        description: N/D
+      - name: year_ref
+        data_type: INTEGER
+        description: Year reference.
+      - name: month_ref
+        data_type: INTEGER
+        description: Month reference.
       - name: created_at
         data_type: TIMESTAMP
         description: Day and time of table creation.
 
   - name: dim_payments
-    description: Payment type table.
+    description: The Payment types.
     columns:
-      - name: payment
+      - name: payment_key
+        data_type: VARCHAR
+        description: The passenger surrogate key.
+        test:
+          - unique
+          - not_null
+      - name: payment_id
+        data_type: INTEGER
+        description: The passenger type identifier.
+      - name: payment_desc
         data_type: VARCHAR
         description: The passenger paid type for the trip.
       - name: created_at
         data_type: TIMESTAMP
         description: Day and time of table creation.
 
-  - name: dim_rates
-    description: Rate type table.
+  - name: dim_ratecodes
+    description: The Rate code types.
     columns:
-      - name: rate
+      - name: ratecode_key
         data_type: VARCHAR
-        description: The final rate name in effect at the end of the trip.
+        description: The ratecode surrogate key.
+        test:
+          - unique
+          - not_null
+      - name: ratecode_id
+        data_type: INTEGER
+        description: The final rate code in effect at the end of the trip..
+      - name: ratecode_desc
+        data_type: VARCHAR
+        description: Rate code description.
       - name: created_at
         data_type: TIMESTAMP
         description: Day and time of table creation.
 
-  - name: dim_trips
-    description: Trip type table.
+  - name: dim_services
+    description: The Trip services type.
     columns:
-      - name: trip
+      - name: service_key
         data_type: VARCHAR
-        description: Type of triping.
+        description: The service surrogate key.
+        test:
+          - unique
+          - not_null
+      - name: service_id
+        data_type: INTEGER
+        description: The service identifier.
+      - name: service_desc
+        data_type: VARCHAR
+        description: Service description.
       - name: created_at
         data_type: TIMESTAMP
         description: Day and time of table creation.
 
   - name: dim_vendors
-    description: Payment types table.
+    description: The Vendor types.
     columns:
-      - name: vendor
+      - name: vendor_key
         data_type: VARCHAR
-        description: The LPEP provider that provided the record.
+        description: The vendor surrogate key.
+        test:
+          - unique
+          - not_null
+      - name: vendor_id
+        data_type: INTEGER
+        description: A code indicating the TPEP provider that provided the record.
+      - name: vendor_desc
+        data_type: VARCHAR
+        description: Vendor description.
+      - name: created_at
+        data_type: TIMESTAMP
+        description: Day and time of table creation.
+
+  - name: dim_zones
+    description: The zone types.
+    columns:
+      - name: zone_key
+        data_type: VARCHAR
+        description: The zone surrogate key.
+        test:
+          - unique
+          - not_null
+      - name: location_id
+        data_type: INTEGER
+      - name: borough
+        data_type: VARCHAR
+      - name: zone
+        data_type: VARCHAR
+      - name: service_zone
+        data_type: VARCHAR
       - name: created_at
         data_type: TIMESTAMP
         description: Day and time of table creation.

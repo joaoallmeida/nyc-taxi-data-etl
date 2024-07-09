@@ -16,8 +16,8 @@ class DuckDB(ConfigurableResource):
     """
 
     def duckConn(self) -> DuckDBPyConnection:
-        # conn = duckdb.connect("/tmp/duckdb.db")
-        conn = duckdb.connect(":memory:")
+        # conn = duckdb.connect(":memory:")
+        conn = duckdb.connect("/tmp/duckdb.db")
         conn.install_extension('httpfs')
         conn.load_extension('httpfs')
 
@@ -49,6 +49,9 @@ class DuckDB(ConfigurableResource):
 
     def create_table_parquet(self, schema:str, table:str, downloadUrl:list) -> SQL:
         return SQL(f"CREATE TABLE IF NOT EXISTS $schema.$table AS SELECT * FROM read_parquet($downloadUrl)", schema=schema, table=table, downloadUrl=downloadUrl)
+
+    def create_table_csv(self, schema:str, table:str, downloadUrl:list) -> SQL:
+        return SQL(f"CREATE TABLE IF NOT EXISTS $schema.$table AS SELECT * FROM read_csv($downloadUrl, header=true)", schema=schema, table=table, downloadUrl=downloadUrl)
 
     def drop_table(self, schema:str, table:str) -> SQL:
         return SQL("DROP TABLE IF EXISTS $schema.$table", schema=schema, table=table,)

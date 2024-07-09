@@ -32,53 +32,54 @@ clean-targets:         # directories to be removed by `dbt clean`
 
 models:
   dbt_transformation:
+    staging:
+      stg_taxi_trips:
+        +materialized: table
+        +on_table_exists: drop
+        +schema: staging
+
     silver:
-      fat_green_trips:
+      fat_trips:
         +materialized: table
         +on_table_exists: drop
         +schema: silver
         +post-hook:
-          - "{{ export_to_minio('silver','fat_green_trips') }}"
-      fat_yellow_trips:
-        +materialized: table
-        +schema: silver
-        +on_table_exists: drop
-        +post-hook:
-          - "{{ export_to_minio('silver','fat_yellow_trips') }}"
-      fat_fhv_trips:
-        +materialized: table
-        +schema: silver
-        +on_table_exists: drop
-        +post-hook:
-          - "{{ export_to_minio('silver','fat_fhv_trips') }}"
+          - "{{ export_to_minio('silver','fat_trips') }}"
       dim_payments:
         +materialized: table
         +schema: silver
         +on_table_exists: drop
         +post-hook:
           - "{{ export_to_minio('silver','dim_payments') }}"
-      dim_rates:
+      dim_ratecodes:
         +materialized: table
         +schema: silver
         +on_table_exists: drop
         +post-hook:
-          - "{{ export_to_minio('silver','dim_rates') }}"
-      dim_trips:
+          - "{{ export_to_minio('silver','dim_ratecodes') }}"
+      dim_services:
         +materialized: table
         +schema: silver
         +on_table_exists: drop
         +post-hook:
-          - "{{ export_to_minio('silver','dim_trips') }}"
+          - "{{ export_to_minio('silver','dim_services') }}"
+      dim_zones:
+        +materialized: table
+        +schema: silver
+        +on_table_exists: drop
+        +post-hook:
+          - "{{ export_to_minio('silver','dim_zones') }}"
       dim_vendors:
         +materialized: table
         +schema: silver
         +on_table_exists: drop
         +post-hook:
           - "{{ export_to_minio('silver','dim_vendors') }}"
-    gold:
-      green_trips_amount_by_payments:
-        +materialized: table
-        +on_table_exists: drop
-        +schema: gold
-        +post-hook:
-          - "{{ export_to_minio('gold','green_trips_amount_by_payments') }}"
+
+    # gold:
+    #   green_trips_amount_by_payments:
+    #     +materialized: table
+    #     +on_table_exists: drop
+    #     +schema: gold
+    #     +post-hook:
+    #       - "{{ export_to_minio('gold','green_trips_amount_by_payments') }}"

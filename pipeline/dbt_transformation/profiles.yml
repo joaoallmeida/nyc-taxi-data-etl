@@ -4,11 +4,9 @@ dbt_transformation:
     dev:
       type: duckdb
       path: '/tmp/duckdb.db'
-      threads: 10
-      # schema: silver
+      threads: 12
       extensions:
         - httpfs
-        - parquet
       settings:
         s3_url_style: "path"
         s3_access_key_id: "{{ env_var('ACCESS_KEY') }}"

@@ -37,12 +37,26 @@ class Ingestion:
         try:
             response = requests.get('https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page')
             soup =  BeautifulSoup(response.text, 'html.parser')
-            records = [link.get('href').strip() for table in soup.find_all('table') for link in table.find_all('a') if link.get('title').replace(' ','-').lower() == source_name]
+
+            if source_name != 'taxi-zones':
+                records = [link.get('href').strip() for table in soup.find_all('table') for link in table.find_all('a') if link.get('title').replace(' ','-').lower() == source_name]
+            else:
+                records = [link.get('href').strip() for table in soup.find_all('ul') for link in table.find_all('a') if link.get('href').endswith('lookup.csv') ]
+
         except Exception as e:
             raise e
         return records
 
-    def get_raw_data(self, source:str, tbName:str , yearRange:dict) -> pd.DataFrame:
+    def get_raw_csv_data(self, source:str, tbName:str):
+        csvUrl = self.__get_url_source_data__(source)
+
+        self.duckUtils.executeQuery(self.duckConn, self.duckUtils.create_table_csv(schema="bronze" ,table=tbName, downloadUrl=csvUrl))
+        meta = self.duckUtils.executeQuery(self.duckConn, self.duckUtils.get_metadata(table=tbName))
+
+        return meta
+
+
+    def get_raw_parquet_data(self, source:str, tbName:str , yearRange:dict) -> pd.DataFrame:
         listUrl = self.__get_url_source_data__(source)
         parquetsUrl = list()
 

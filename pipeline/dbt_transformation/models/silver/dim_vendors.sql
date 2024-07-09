@@ -1,10 +1,11 @@
-WITH stg_vendor AS (
-    SELECT *
-    FROM {{ source('bronze','raw_vendors') }}
+WITH stg_vendors AS (
+    SELECT DISTINCT vendor_id
+    FROM {{ ref('stg_taxi_trips') }}
+    WHERE vendor_id IS NOT NULL
 )
 SELECT
-    id
-    ,vendor AS vendor_name
-    ,CURRENT_TIMESTAMP AS created_at
-    ,YEAR(CURRENT_TIMESTAMP) AS year_ref
-FROM stg_vendor
+    {{ dbt_utils.surrogate_key(['vendor_id']) }} as vendor_key
+   , vendor_id
+   , {{ get_descriptions('vendor', 'vendor_id') }} as vendor_desc
+   ,CURRENT_TIMESTAMP AS created_at
+FROM stg_vendors
