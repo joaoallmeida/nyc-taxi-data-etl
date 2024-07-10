@@ -37,6 +37,8 @@ models:
         +materialized: table
         +on_table_exists: drop
         +schema: staging
+        +post-hook:
+          - "{{ export_to_minio('staging','stg_taxi_trips') }}"
 
     silver:
       fat_trips:

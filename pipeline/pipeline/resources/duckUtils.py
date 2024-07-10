@@ -2,6 +2,7 @@ from string import Template
 from dagster import ConfigurableResource
 from sqlescapy import sqlescape
 from duckdb import DuckDBPyConnection
+
 import duckdb
 import os
 
@@ -10,7 +11,7 @@ class SQL:
         self.sql = query
         self.options = options
 
-class DuckDB(ConfigurableResource):
+class DuckDBUtils(ConfigurableResource):
     """
         A personal resource used to help in duckdb sql statements executions.
     """

@@ -3,18 +3,20 @@ from dagster import file_relative_path, AssetKey
 from pathlib import Path
 from bs4 import BeautifulSoup
 from duckdb import DuckDBPyConnection
-import duckdb
-from pipeline.duckUtilsResource import DuckDB
+from .duckUtils import DuckDBUtils
+
 import requests
+import os
 import pandas as pd
 
 
 # DBT Resource
-dbtResource = DbtCliResource(
-    project_dir=file_relative_path(__file__,'../dbt_transformation')
+DBT_PROJECT_DIR = file_relative_path(__file__,"../../dbt_transformation")
+DBT_RESOURCE = DbtCliResource(
+    project_dir=DBT_PROJECT_DIR
 )
 
-dbtManifest =(dbtResource.cli(["parse"], target_path=Path('target'), manifest={})
+DBT_MANIFEST =(DBT_RESOURCE.cli(["parse"], target_path=Path('target'), manifest={})
               .wait()
               .target_path.joinpath('manifest.json'))
 
@@ -27,9 +29,10 @@ class CustomDagsterDbtTranslator(DagsterDbtTranslator):
     def get_group_name(cls, dbt_resource_props) -> str:
         return "Silver"
 
+
 # Ingestion Resource
-class Ingestion:
-    def __init__(self, duckConn: DuckDBPyConnection, duckdb: DuckDB ) -> None:
+class IngestionResource:
+    def __init__(self, duckConn: DuckDBPyConnection, duckdb: DuckDBUtils ) -> None:
         self.duckConn = duckConn
         self.duckUtils = duckdb
 
@@ -56,13 +59,13 @@ class Ingestion:
         return meta
 
 
-    def get_raw_parquet_data(self, source:str, tbName:str , yearRange:dict) -> pd.DataFrame:
+    def get_raw_parquet_data(self, source:str, tbName:str , yearRange) -> pd.DataFrame:
         listUrl = self.__get_url_source_data__(source)
         parquetsUrl = list()
 
         for url in listUrl:
             year = int(url.split('_')[-1].split('-')[0])
-            if year in [year for year in range(yearRange["from"], yearRange["to"] + 1)]:
+            if year in [year for year in range(yearRange.yearFrom, yearRange.yearTo + 1)]:
                 parquetsUrl.append(url)
 
         self.duckUtils.executeQuery(self.duckConn, self.duckUtils.create_table_parquet(schema="bronze" ,table=tbName, downloadUrl=parquetsUrl))
