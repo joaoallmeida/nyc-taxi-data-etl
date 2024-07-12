@@ -1,6 +1,5 @@
-from dagster import AssetExecutionContext, Config, Int, RetryPolicy, Backoff
-from dagster import asset
-from dagster_dbt import dbt_assets, DbtCliResource
+from dagster import AssetExecutionContext, Config, Int, RetryPolicy, Backoff, asset, MetadataValue
+from dagster_dbt import dbt_assets, DbtCliResource, DagsterDbtTranslatorSettings
 
 from pipeline.resources.duckUtils import DuckDBUtils
 from pipeline.resources import IngestionResource, DBT_MANIFEST, CustomDagsterDbtTranslator
@@ -21,7 +20,7 @@ def raw_green_taxi_trip_records(context: AssetExecutionContext, duckdb: DuckDBUt
     startTime = time.time()
     source = "green-taxi-trip-records"
     tbName = "raw_" + source.replace('-','_')
-    minioPath = f'{os.environ['MINIO_PATH_BRONZE']}/{tbName}/data.parquet'
+    minioPath = f"{os.environ['MINIO_PATH_BRONZE']}/{tbName}/data.parquet"
 
     context.log.info(f'Creating table: {tbName}')
 
@@ -32,12 +31,15 @@ def raw_green_taxi_trip_records(context: AssetExecutionContext, duckdb: DuckDBUt
     duckdb.executeQuery(duckConn, duckdb.copy_to_minio( schema="bronze" ,table=tbName, minioPath=minioPath))
     context.log.info(f'Data upload has completed.')
 
+    dataView = duckdb.executeQuery(duckConn, duckdb.select_table( schema="bronze" ,table=tbName))
+
     context.add_output_metadata( metadata={
              "Estimated Size": f"{metadata['estimated_size'][0]:,.0f}"
             ,"Schema": metadata['schema_name'][0]
             ,"Table": metadata['table_name'][0]
             ,"Columns": int(metadata['column_count'][0])
             ,"Execution Time": (time.time()-startTime)
+            ,"Preview": MetadataValue.md(dataView.to_markdown())
     } )
 
     context.log.info(f'Table creation has completed')
@@ -48,7 +50,7 @@ def raw_yellow_taxi_trip_records(context: AssetExecutionContext, duckdb: DuckDBU
     startTime = time.time()
     source = "yellow-taxi-trip-records"
     tbName = "raw_" + source.replace('-','_')
-    minioPath = f'{os.environ['MINIO_PATH_BRONZE']}/{tbName}/data.parquet'
+    minioPath = f"{os.environ['MINIO_PATH_BRONZE']}/{tbName}/data.parquet"
 
     context.log.info(f'Creating table: {tbName}')
 
@@ -59,12 +61,15 @@ def raw_yellow_taxi_trip_records(context: AssetExecutionContext, duckdb: DuckDBU
     duckdb.executeQuery(duckConn, duckdb.copy_to_minio(schema="bronze" ,table=tbName, minioPath=minioPath))
     context.log.info(f'Data upload has completed.')
 
+    dataView = duckdb.executeQuery(duckConn, duckdb.select_table( schema="bronze" ,table=tbName))
+
     context.add_output_metadata( metadata={
              "Estimated Size": f"{metadata['estimated_size'][0]:,.0f}"
             ,"Schema": metadata['schema_name'][0]
             ,"Table": metadata['table_name'][0]
             ,"Columns": int(metadata['column_count'][0])
             ,"Execution Time": (time.time()-startTime)
+            ,"Preview": MetadataValue.md(dataView.to_markdown())
     } )
 
     context.log.info(f'Table creation has completed')
@@ -76,7 +81,7 @@ def raw_taxi_zones(context: AssetExecutionContext, duckdb: DuckDBUtils ):
     startTime = time.time()
     source = 'taxi-zones'
     tbName = "raw_" + source.replace('-','_')
-    minioPath = f'{os.environ['MINIO_PATH_BRONZE']}/{tbName}/data.parquet'
+    minioPath = f"{os.environ['MINIO_PATH_BRONZE']}/{tbName}/data.parquet"
 
     context.log.info(f'Creating table: {tbName}')
 
@@ -87,18 +92,21 @@ def raw_taxi_zones(context: AssetExecutionContext, duckdb: DuckDBUtils ):
     duckdb.executeQuery(duckConn, duckdb.copy_to_minio(schema="bronze" ,table=tbName, minioPath=minioPath))
     context.log.info(f'Data upload has completed.')
 
+    dataView = duckdb.executeQuery(duckConn, duckdb.select_table( schema="bronze" ,table=tbName))
+
     context.add_output_metadata( metadata={
              "Estimated Size": f"{metadata['estimated_size'][0]:,.0f}"
             ,"Schema": metadata['schema_name'][0]
             ,"Table": metadata['table_name'][0]
             ,"Columns": int(metadata['column_count'][0])
             ,"Execution Time": (time.time()-startTime)
+            ,"Preview": MetadataValue.md(dataView.to_markdown())
     } )
 
     context.log.info(f'Table creation has completed')
 
 
-@dbt_assets(manifest=DBT_MANIFEST, dagster_dbt_translator=CustomDagsterDbtTranslator() )
+@dbt_assets(manifest=DBT_MANIFEST, dagster_dbt_translator=CustomDagsterDbtTranslator(settings=DagsterDbtTranslatorSettings(enable_asset_checks=True)) )
 def refined_trips_data(context: AssetExecutionContext, dbt: DbtCliResource):
     yield from dbt.cli(["build"], context=context).stream()
 

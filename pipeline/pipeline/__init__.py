@@ -32,7 +32,7 @@ params = [
 
 assets_check = []
 for param in params:
-    assets_check.append(check_non_nulls(param)) 
+    assets_check.append(check_non_nulls(param))
     assets_check.append(check_non_empty(param))
     assets_check.append(check_num_cols(param))
     assets_check.append(check_volume_data(param))
@@ -45,6 +45,13 @@ assets_job = define_asset_job(
     description="TLC Trip Record Data Yellow and green taxi trip records include fields capturing pick-up and drop-off dates/times, pick-up and drop-off locations, trip distances, itemized fares, rate types, payment types, and driver-reported passenger counts",
     selection=all_assets,
     config={
+        "execution": {
+            "config": {
+                "multiprocess": {
+                    "max_concurrent": 6,
+                },
+            }
+        },
         "ops": {
             "raw_green_taxi_trip_records":{
                 "config": {

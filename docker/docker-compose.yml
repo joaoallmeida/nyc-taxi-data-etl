@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  dagster:
+    image: mydagster
+    container_name: dagster
+    ports:
+      - 4000:4000
+    env_file:
+      ./docker.env
+    restart:
+      unless-stopped
+
+  # minio:
+  #   image: minio/minio:latest
+  #   container_name: minio
+  #   hostname: minio
+  #   ports:
+  #     - "9000:9000"
+  #     - "9001:9001"
+  #   volumes:
+  #     - minio_storage:/data
+  #   environment:
+  #     MINIO_ACCESS_KEY: minio_access_key
+  #     MINIO_SECRET_KEY: minio_secret_key
+  #   command: server --console-address ":9001" /data

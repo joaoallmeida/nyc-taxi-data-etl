@@ -12,7 +12,9 @@ class SQL:
         self.options = options
 
 class DuckDBUtils(ConfigurableResource):
-    """
+    """Duckdb Utiils
+
+    Description:
         A personal resource used to help in duckdb sql statements executions.
     """
 
@@ -56,6 +58,9 @@ class DuckDBUtils(ConfigurableResource):
 
     def drop_table(self, schema:str, table:str) -> SQL:
         return SQL("DROP TABLE IF EXISTS $schema.$table", schema=schema, table=table,)
+
+    def select_table(self, schema:str, table:str) -> SQL:
+        return SQL(f"SELECT * FROM $schema.$table LIMIT 10", schema=schema, table=table)
 
     def get_metadata(self, table:str) -> SQL:
         return SQL(f"SELECT * FROM duckdb_tables() WHERE table_name = '$table'", table=table)

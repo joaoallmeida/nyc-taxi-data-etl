@@ -16,7 +16,8 @@ dim_zones AS (
 stg_fat_trips AS (
     SELECT * FROM {{ ref('stg_taxi_trips') }}
 )
-SELECT  {{ dbt_utils.surrogate_key(['A.dropoff_datetime','A.pickup_datetime']) }} AS fat_key
+SELECT  DISTINCT
+          A.fat_key
         , E.vendor_key
         , C.ratecode_key
         , B.payment_key
@@ -45,5 +46,5 @@ INNER JOIN dim_payments B   ON A.payment_id = B.payment_id
 INNER JOIN dim_ratecodes C  ON A.ratecode_id = C.ratecode_id
 INNER JOIN dim_services D   ON A.service_id =  D.service_id
 INNER JOIN dim_vendors E    ON A.vendor_id = E.vendor_id
-INNER JOIN dim_zones F      ON A.pulocation_id = F.location_id
-INNER JOIN dim_zones G      ON A.dolocation_id = G.location_id
+INNER JOIN dim_zones F      ON A.pu_location_id = F.location_id
+INNER JOIN dim_zones G      ON A.do_location_id = G.location_id

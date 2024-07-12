@@ -1,5 +1,5 @@
 SELECT
-    {{ dbt_utils.surrogate_key(['LocationID']) }} as zone_key
+    {{ dbt_utils.surrogate_key(['LocationID','borough']) }} as zone_key
     , LocationID AS location_id
     , Borough AS borough
     , Zone AS zone

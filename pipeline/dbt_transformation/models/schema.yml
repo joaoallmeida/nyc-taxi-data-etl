@@ -7,14 +7,12 @@ models:
       - name: fat_key
         data_type: INTEGER
         description: Fat surrogate key.
-        test:
-          - unique
+        data_tests:
           - not_null
       - name: vendor_key
         data_type: INTEGER
         description: A surrogate code indicating the TPEP provider that provided the record.
-        test:
-          - unique
+        data_tests:
           - not_null
       - name: pickup_datetime
         data_type: TIMESTAMP
@@ -31,29 +29,30 @@ models:
       - name: trip_distance_km
         data_type: DOUBLE
         description: The elapsed trip distance in kilometers reported by the taximeter.
-      - name: pulocation_key
+      - name: pu_location_key
         data_type: INTEGER
         description: TLC Taxi Zone in which the taximeter was engaged
-      - name: dolocation_key
+        data_tests:
+          - not_null
+      - name: do_location_key
         data_type: INTEGER
         description: TLC Taxi Zone in which the taximeter was disengaged
+        data_tests:
+          - not_null
       - name: ratecode_key
         data_type: BIGINT
         description: The surrogate rate code in effect at the end of the trip.
-        test:
-          - unique
+        data_tests:
           - not_null
       - name: payment_key
         data_type: INTEGER
         description: A surrogate code signifying how the passenger paid for the trip.
-        test:
-          - unique
+        data_tests:
           - not_null
       - name: service_key
         data_type: INTEGER
         description: Surrogate for green or yellow taxi service.
-        test:
-          - unique
+        data_tests:
           - not_null
       - name: fare_amount
         data_type: DOUBLE
@@ -98,15 +97,16 @@ models:
       - name: payment_key
         data_type: VARCHAR
         description: The passenger surrogate key.
-        test:
-          - unique
-          - not_null
       - name: payment_id
         data_type: INTEGER
         description: The passenger type identifier.
+        data_tests:
+          - unique
       - name: payment_desc
         data_type: VARCHAR
         description: The passenger paid type for the trip.
+        data_tests:
+          - not_null
       - name: created_at
         data_type: TIMESTAMP
         description: Day and time of table creation.
@@ -117,15 +117,16 @@ models:
       - name: ratecode_key
         data_type: VARCHAR
         description: The ratecode surrogate key.
-        test:
-          - unique
-          - not_null
       - name: ratecode_id
         data_type: INTEGER
         description: The final rate code in effect at the end of the trip..
+        data_tests:
+          - unique
       - name: ratecode_desc
         data_type: VARCHAR
         description: Rate code description.
+        data_tests:
+          - not_null
       - name: created_at
         data_type: TIMESTAMP
         description: Day and time of table creation.
@@ -136,15 +137,18 @@ models:
       - name: service_key
         data_type: VARCHAR
         description: The service surrogate key.
-        test:
-          - unique
-          - not_null
       - name: service_id
         data_type: INTEGER
         description: The service identifier.
+        data_tests:
+          - unique
       - name: service_desc
         data_type: VARCHAR
         description: Service description.
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: ['GREEN','YELLOW']
       - name: created_at
         data_type: TIMESTAMP
         description: Day and time of table creation.
@@ -155,15 +159,16 @@ models:
       - name: vendor_key
         data_type: VARCHAR
         description: The vendor surrogate key.
-        test:
-          - unique
-          - not_null
       - name: vendor_id
         data_type: INTEGER
         description: A code indicating the TPEP provider that provided the record.
+        data_tests:
+          - unique
       - name: vendor_desc
         data_type: VARCHAR
         description: Vendor description.
+        data_tests:
+          - not_null
       - name: created_at
         data_type: TIMESTAMP
         description: Day and time of table creation.
@@ -174,11 +179,12 @@ models:
       - name: zone_key
         data_type: VARCHAR
         description: The zone surrogate key.
-        test:
+        data_tests:
           - unique
-          - not_null
       - name: location_id
         data_type: INTEGER
+        data_tests:
+          - not_null
       - name: borough
         data_type: VARCHAR
       - name: zone

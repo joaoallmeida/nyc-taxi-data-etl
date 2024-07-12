@@ -17,11 +17,10 @@ WITH stg_yellow_trips AS (
         ,tolls_amount
         ,improvement_surcharge
         ,total_amount
-        ,airport_fee as fee
+        ,COALESCE(airport_fee,0) as fee
         ,COALESCE(congestion_surcharge,0) AS congestion_surcharge
         ,YEAR(tpep_pickup_datetime) AS year_ref
         ,MONTH(tpep_pickup_datetime) AS month_ref
-        ,CURRENT_TIMESTAMP AS created_at
     FROM {{ source('bronze','raw_yellow_taxi_trip_records') }}
     WHERE 1=1
     AND YEAR(tpep_pickup_datetime) >= 2020
@@ -45,11 +44,10 @@ stg_green_trips AS (
         , tolls_amount
         , improvement_surcharge
         , total_amount
-        , ehail_fee as fee
+        , COALESCE(ehail_fee,0) as fee
         , COALESCE(congestion_surcharge,0) AS congestion_surcharge
         , YEAR(lpep_pickup_datetime) as year_ref
         , MONTH(lpep_pickup_datetime) as month_ref
-        , CURRENT_TIMESTAMP AS created_at
     FROM {{ source('bronze','raw_green_taxi_trip_records') }}
     WHERE 1=1
     AND YEAR(lpep_pickup_datetime) >= 2020
@@ -61,7 +59,8 @@ stg_fat_trips AS (
     SELECT *
     FROM stg_green_trips
 )
-SELECT  {{ dbt_utils.surrogate_key(['service_id','vendor_id']) }} as fat_key
+SELECT DISTINCT
+         {{ dbt_utils.surrogate_key(['vendor_id','payment_id','ratecode_id','service_id','pickup_datetime','dropoff_datetime','pulocation_id','dolocation_id']) }} as fat_key
         , vendor_id
         , pickup_datetime
         , dropoff_datetime
@@ -69,8 +68,8 @@ SELECT  {{ dbt_utils.surrogate_key(['service_id','vendor_id']) }} as fat_key
         , trip_distance
         , {{ miles_to_km('trip_distance') }} AS trip_distance_km
         , ratecode_id
-        , pulocation_id
-        , dolocation_id
+        , pulocation_id AS pu_location_id
+        , dolocation_id AS do_location_id
         , payment_id
         , service_id
         , fare_amount
@@ -84,5 +83,4 @@ SELECT  {{ dbt_utils.surrogate_key(['service_id','vendor_id']) }} as fat_key
         , congestion_surcharge
         , year_ref
         , month_ref
-        , created_at
 FROM stg_fat_trips

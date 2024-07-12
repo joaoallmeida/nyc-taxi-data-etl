@@ -77,11 +77,3 @@ models:
         +on_table_exists: drop
         +post-hook:
           - "{{ export_to_minio('silver','dim_vendors') }}"
-
-    # gold:
-    #   green_trips_amount_by_payments:
-    #     +materialized: table
-    #     +on_table_exists: drop
-    #     +schema: gold
-    #     +post-hook:
-    #       - "{{ export_to_minio('gold','green_trips_amount_by_payments') }}"
