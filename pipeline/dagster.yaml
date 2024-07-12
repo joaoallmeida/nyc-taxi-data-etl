@@ -1,13 +1,12 @@
 telemetry:
   enabled: false
 
-# run_queue:
-#   max_concurrent_runs: 15
+local_artifact_storage:
+  module: dagster.core.storage.root
+  class: LocalArtifactStorage
+  config:
+    base_dir: "/opt/dagster/local/"
 
-# load_from:
-#   - python_file:
-#       working_directory: /opt/dagster/app/
-
-# run_launcher:
-#   module: dagster_docker
-#   class: DockerRunLauncher
+compute_logs:
+  module: dagster.core.storage.noop_compute_log_manager
+  class: NoOpComputeLogManager

@@ -7,7 +7,7 @@ from pipeline.resources import IngestionResource, DBT_MANIFEST, CustomDagsterDbt
 import time
 import os
 
-retryProlicy = RetryPolicy( max_retries=5, delay=5, backoff=Backoff.EXPONENTIAL )
+retryProlicy = RetryPolicy( max_retries=5, delay=15, backoff=Backoff.EXPONENTIAL )
 
 class AssetConfigParameter(Config):
     yearFrom: Int

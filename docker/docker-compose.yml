@@ -2,14 +2,15 @@ version: '3'
 
 services:
   dagster:
-    image: mydagster
+    image: dagster
     container_name: dagster
     ports:
       - 4000:4000
     env_file:
       ./docker.env
-    restart:
-      unless-stopped
+    networks:
+      - dagster-net
+    restart: on-failure
 
   # minio:
   #   image: minio/minio:latest
@@ -24,3 +25,7 @@ services:
   #     MINIO_ACCESS_KEY: minio_access_key
   #     MINIO_SECRET_KEY: minio_secret_key
   #   command: server --console-address ":9001" /data
+
+networks:
+  dagster-net:
+    driver: bridge
