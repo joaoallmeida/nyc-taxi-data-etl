@@ -6,7 +6,6 @@ destroy:
 	docker-compose -f docker/docker-compose.yml down
 	docker image rmi dagster
 
-
 setup:
 	poetry install
 	poetry shell

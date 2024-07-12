@@ -8,7 +8,7 @@
             WHEN {{ value }} = 4 THEN 'DISPUTE'
             WHEN {{ value }} = 5 THEN 'UNKNOWN'
             WHEN {{ value }} = 6 THEN 'VOIDED TRIP'
-            ELSE 'UNKNOW'
+            ELSE 'N/D'
         END
     {% elif name == 'ratecode' %}
         CASE
