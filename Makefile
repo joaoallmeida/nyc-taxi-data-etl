@@ -1,5 +1,5 @@
 build:
-	docker build -f docker/Dockerfile -t dagster . 
+	docker build --no-cache -f docker/Dockerfile -t dagster . 
 	docker-compose -f docker/docker-compose.yml up -d
 	
 destroy:

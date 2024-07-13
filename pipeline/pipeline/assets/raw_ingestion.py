@@ -19,19 +19,17 @@ def raw_green_taxi_trip_records(context: AssetExecutionContext, duckdb: DuckDBUt
 
     startTime = time.time()
     source = "green-taxi-trip-records"
-    tbName = "raw_" + source.replace('-','_')
-    minioPath = f"{os.environ['MINIO_PATH_BRONZE']}/{tbName}/data.parquet"
 
-    context.log.info(f'Creating table: {tbName}')
+    context.log.info(f'Creating table: Green Trips')
 
     duckConn = duckdb.duckConn()
-    metadata = IngestionResource(duckConn, duckdb).get_raw_parquet_data(source=source, tbName=tbName, yearRange=config)
+    metadata = IngestionResource(duckConn, duckdb).get_raw_parquet_data(source=source, yearRange=config)
 
-    context.log.info(f'Upload data to datalake: {minioPath} ')
-    duckdb.executeQuery(duckConn, duckdb.copy_to_minio( schema="bronze" ,table=tbName, minioPath=minioPath))
+    context.log.info(f'Upload data to datalake')
+    duckdb.executeQuery(duckConn, duckdb.copy_to_minio( schema="bronze" ,table=metadata['table_name'][0]))
     context.log.info(f'Data upload has completed.')
 
-    dataView = duckdb.executeQuery(duckConn, duckdb.select_table( schema="bronze" ,table=tbName))
+    dataView = duckdb.executeQuery(duckConn, duckdb.select_table( schema="bronze" ,table=metadata['table_name'][0]))
 
     context.add_output_metadata( metadata={
              "Estimated Size": f"{metadata['estimated_size'][0]:,.0f}"
@@ -43,25 +41,24 @@ def raw_green_taxi_trip_records(context: AssetExecutionContext, duckdb: DuckDBUt
     } )
 
     context.log.info(f'Table creation has completed')
+    duckConn.close()
 
 @asset(compute_kind='duckdb', group_name='Bronze', retry_policy=retryProlicy)
 def raw_yellow_taxi_trip_records(context: AssetExecutionContext, duckdb: DuckDBUtils, config: AssetConfigParameter ):
 
     startTime = time.time()
-    source = "yellow-taxi-trip-records"
-    tbName = "raw_" + source.replace('-','_')
-    minioPath = f"{os.environ['MINIO_PATH_BRONZE']}/{tbName}/data.parquet"
+    sourceName = "yellow-taxi-trip-records"
 
-    context.log.info(f'Creating table: {tbName}')
+    context.log.info(f'Creating table: Yellow Trips')
 
     duckConn = duckdb.duckConn()
-    metadata = IngestionResource(duckConn, duckdb).get_raw_parquet_data(source=source, tbName=tbName, yearRange=config)
+    metadata = IngestionResource(duckConn, duckdb).get_raw_parquet_data(source=sourceName, yearRange=config)
 
-    context.log.info(f'Send data to datalake: {minioPath} ')
-    duckdb.executeQuery(duckConn, duckdb.copy_to_minio(schema="bronze" ,table=tbName, minioPath=minioPath))
+    context.log.info(f'Send data to datalake')
+    duckdb.executeQuery(duckConn, duckdb.copy_to_minio(schema="bronze" ,table=metadata["table_name"][0]))
     context.log.info(f'Data upload has completed.')
 
-    dataView = duckdb.executeQuery(duckConn, duckdb.select_table( schema="bronze" ,table=tbName))
+    dataView = duckdb.executeQuery(duckConn, duckdb.select_table( schema="bronze" ,table=metadata["table_name"][0]))
 
     context.add_output_metadata( metadata={
              "Estimated Size": f"{metadata['estimated_size'][0]:,.0f}"
@@ -73,26 +70,25 @@ def raw_yellow_taxi_trip_records(context: AssetExecutionContext, duckdb: DuckDBU
     } )
 
     context.log.info(f'Table creation has completed')
+    duckConn.close()
 
 
 @asset(compute_kind='duckdb', group_name='Bronze', retry_policy=retryProlicy)
 def raw_taxi_zones(context: AssetExecutionContext, duckdb: DuckDBUtils ):
 
     startTime = time.time()
-    source = 'taxi-zones'
-    tbName = "raw_" + source.replace('-','_')
-    minioPath = f"{os.environ['MINIO_PATH_BRONZE']}/{tbName}/data.parquet"
+    sourceName = 'taxi-zones'
 
-    context.log.info(f'Creating table: {tbName}')
+    context.log.info(f'Creating table: Taxi Zones')
 
     duckConn = duckdb.duckConn()
-    metadata = IngestionResource(duckConn, duckdb).get_raw_csv_data(source=source, tbName=tbName)
+    metadata = IngestionResource(duckConn, duckdb).get_raw_csv_data(source=sourceName)
 
-    context.log.info(f'Send data to datalake: {minioPath} ')
-    duckdb.executeQuery(duckConn, duckdb.copy_to_minio(schema="bronze" ,table=tbName, minioPath=minioPath))
+    context.log.info(f'Send data to datalake')
+    duckdb.executeQuery(duckConn, duckdb.copy_to_minio(schema="bronze" ,table=metadata['table_name'][0]))
     context.log.info(f'Data upload has completed.')
 
-    dataView = duckdb.executeQuery(duckConn, duckdb.select_table( schema="bronze" ,table=tbName))
+    dataView = duckdb.executeQuery(duckConn, duckdb.select_table( schema="bronze" ,table=metadata['table_name'][0]))
 
     context.add_output_metadata( metadata={
              "Estimated Size": f"{metadata['estimated_size'][0]:,.0f}"
@@ -104,6 +100,7 @@ def raw_taxi_zones(context: AssetExecutionContext, duckdb: DuckDBUtils ):
     } )
 
     context.log.info(f'Table creation has completed')
+    duckConn.close()
 
 
 @dbt_assets(manifest=DBT_MANIFEST, dagster_dbt_translator=CustomDagsterDbtTranslator(settings=DagsterDbtTranslatorSettings(enable_asset_checks=True)) )

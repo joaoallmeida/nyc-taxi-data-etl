@@ -14,3 +14,16 @@ dbt_transformation:
         s3_endpoint: "{{ env_var('ENDPOINT_MINIO') }}"
         memory_limit: "10GB"
         preserve_insertion_order: false
+    prod:
+      type: duckdb
+      path: '/tmp/duckdb.db'
+      threads: 12
+      extensions:
+        - httpfs
+      settings:
+        s3_url_style: "path"
+        s3_access_key_id: "{{ env_var('ACCESS_KEY') }}"
+        s3_secret_access_key: "{{ env_var('SECRET_ACCESS') }}"
+        s3_endpoint: "{{ env_var('ENDPOINT_MINIO') }}"
+        memory_limit: "10GB"
+        preserve_insertion_order: false

@@ -16,15 +16,14 @@ RUN pip install \
         beautifulsoup4 \
         s3fs \
         sqlescapy \
-        pandas 
+        pandas \ 
+        --no-cache-dir
 
 # Copy your code and workspace to /opt/dagster/app
 COPY ../pipeline /opt/dagster/app
 
-
 # Copy dagster instance YAML to $DAGSTER_HOME
 COPY ../pipeline/dagster.yaml $DAGSTER_HOME
-
 
 EXPOSE 4000
 

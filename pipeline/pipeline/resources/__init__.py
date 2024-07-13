@@ -13,7 +13,8 @@ import pandas as pd
 # DBT Resource
 DBT_PROJECT_DIR = file_relative_path(__file__,"../../dbt_transformation")
 DBT_RESOURCE = DbtCliResource(
-    project_dir=DBT_PROJECT_DIR
+    project_dir=DBT_PROJECT_DIR,
+    target=os.environ['ENVIRONMENT']
 )
 
 DBT_MANIFEST =(DBT_RESOURCE.cli(["parse"], target_path=Path('target'), manifest={})
@@ -50,8 +51,9 @@ class IngestionResource:
             raise e
         return records
 
-    def get_raw_csv_data(self, source:str, tbName:str):
+    def get_raw_csv_data(self, source:str):
         csvUrl = self.__get_url_source_data__(source)
+        tbName = "raw_" + source.replace('-','_')
 
         self.duckUtils.executeQuery(self.duckConn, self.duckUtils.create_table_csv(schema="bronze" ,table=tbName, downloadUrl=csvUrl))
         meta = self.duckUtils.executeQuery(self.duckConn, self.duckUtils.get_metadata(table=tbName))
@@ -59,9 +61,10 @@ class IngestionResource:
         return meta
 
 
-    def get_raw_parquet_data(self, source:str, tbName:str , yearRange) -> pd.DataFrame:
+    def get_raw_parquet_data(self, source:str, yearRange) -> pd.DataFrame:
         listUrl = self.__get_url_source_data__(source)
         parquetsUrl = list()
+        tbName = "raw_" + source.replace('-','_')
 
         for url in listUrl:
             year = int(url.split('_')[-1].split('-')[0])

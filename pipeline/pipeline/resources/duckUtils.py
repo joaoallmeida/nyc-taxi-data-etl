@@ -47,7 +47,8 @@ class DuckDBUtils(ConfigurableResource):
             return
         return result.df()
 
-    def copy_to_minio(self, schema:str, table:str, minioPath:str ) -> SQL:
+    def copy_to_minio(self, schema:str, table:str ) -> SQL:
+        minioPath = f"{os.environ['MINIO_PATH_BRONZE']}/{table}/data.parquet"
         return SQL(f"COPY $schema.$table TO '$minioPath' (FORMAT PARQUET, OVERWRITE_OR_IGNORE true, COMPRESSION 'zstd', ROW_GROUP_SIZE 1000000)", schema=schema, table=table, minioPath=minioPath)
 
     def create_table_parquet(self, schema:str, table:str, downloadUrl:list) -> SQL:
