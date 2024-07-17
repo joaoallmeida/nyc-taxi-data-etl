@@ -7,7 +7,6 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.12,<3.13"
-pydantic = "^2.7.4"
 dagster = {version="^1.7.10", python="3.12"}
 dagster-webserver = {version="^1.7.10", python="3.12"}
 beautifulsoup4 = "^4.12.3"
@@ -19,6 +18,8 @@ dagster-duckdb = "^0.23.12"
 dagster-dbt = "^0.23.12"
 sqlescapy = "^1.0.1"
 pandas = "^2.2.2"
+streamlit = "^1.36.0"
+plotly = "^5.22.0"
 
 
 [build-system]

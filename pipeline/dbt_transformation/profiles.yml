@@ -16,7 +16,7 @@ dbt_transformation:
         preserve_insertion_order: false
     prod:
       type: duckdb
-      path: '/tmp/duckdb.db'
+      path: '/opt/dagster/app/data/duckdb.db'
       threads: 12
       extensions:
         - httpfs

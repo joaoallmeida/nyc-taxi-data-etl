@@ -64,6 +64,7 @@ SELECT DISTINCT
         , vendor_id
         , pickup_datetime
         , dropoff_datetime
+        , DATEDIFF('minute', pickup_datetime, dropoff_datetime) AS duration_trip
         , passenger_count
         , trip_distance
         , {{ miles_to_km('trip_distance') }} AS trip_distance_km

@@ -38,6 +38,7 @@ SELECT  DISTINCT
         , A.congestion_surcharge
         , A.pickup_datetime
         , A.dropoff_datetime
+        , A.duration_trip
         , A.year_ref
         , A.month_ref
         , CURRENT_TIMESTAMP AS created_at

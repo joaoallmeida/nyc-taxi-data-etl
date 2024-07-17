@@ -19,8 +19,8 @@ class DuckDBUtils(ConfigurableResource):
     """
 
     def duckConn(self) -> DuckDBPyConnection:
-        # conn = duckdb.connect(":memory:")
-        conn = duckdb.connect("/tmp/duckdb.db")
+        duckdbPath = os.environ['DUCKDB_PATH']
+        conn = duckdb.connect(f"{duckdbPath}/duckdb.db")
         conn.install_extension('httpfs')
         conn.load_extension('httpfs')
 

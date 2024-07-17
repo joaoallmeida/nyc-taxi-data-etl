@@ -8,6 +8,8 @@ services:
       - 4000:4000
     env_file:
       ./docker.env
+    volumes:
+      - ${PWD}/data:/opt/dagster/app/data
     networks:
       - dagster-net
     restart: on-failure

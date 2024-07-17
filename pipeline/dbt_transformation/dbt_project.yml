@@ -39,7 +39,6 @@ models:
         +schema: staging
         +post-hook:
           - "{{ export_to_minio('staging','stg_taxi_trips') }}"
-
     silver:
       fat_trips:
         +materialized: table
@@ -77,3 +76,9 @@ models:
         +on_table_exists: drop
         +post-hook:
           - "{{ export_to_minio('silver','dim_vendors') }}"
+      dim_calendar:
+        +materialized: table
+        +schema: silver
+        +on_table_exists: drop
+        +post-hook:
+          - "{{ export_to_minio('silver','dim_calendar') }}"
