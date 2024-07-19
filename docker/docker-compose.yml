@@ -28,6 +28,19 @@ services:
   #     MINIO_SECRET_KEY: minio_secret_key
   #   command: server --console-address ":9001" /data
 
+  streamlit:
+    image: streamlit:latest
+    container_name: streamlit
+    environment:
+      DUCKDB_PATH: /data
+    volumes:
+      - ${PWD}/data:/data
+    ports:
+      - 8501:8501
+    depends_on:
+      - dagster
+    restart: on-failure
+
 networks:
   dagster-net:
     driver: bridge

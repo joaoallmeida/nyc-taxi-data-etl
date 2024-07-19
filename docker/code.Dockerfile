@@ -6,7 +6,7 @@ ENV DAGSTER_HOME=/opt/dagster/dagster_home/
 
 WORKDIR /opt/dagster/app
 
-RUN pip install \
+RUN pip3 install \
         dagster \
         dagster-webserver \
         dagster-duckdb \
