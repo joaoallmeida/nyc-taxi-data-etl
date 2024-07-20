@@ -5,7 +5,6 @@ from pipeline.resources.duckUtils import DuckDBUtils
 from pipeline.resources import IngestionResource, DBT_MANIFEST, CustomDagsterDbtTranslator
 
 import time
-import os
 
 retryProlicy = RetryPolicy( max_retries=5, delay=15, backoff=Backoff.EXPONENTIAL )
 
@@ -26,7 +25,7 @@ def raw_green_taxi_trip_records(context: AssetExecutionContext, duckdb: DuckDBUt
     metadata = IngestionResource(duckConn, duckdb).get_raw_parquet_data(source=source, yearRange=config)
 
     context.log.info(f'Upload data to datalake')
-    duckdb.executeQuery(duckConn, duckdb.copy_to_minio( schema="bronze" ,table=metadata['table_name'][0]))
+    duckdb.executeQuery(duckConn, duckdb.copy_to_minio(schema="bronze" ,table=metadata['table_name'][0], timestampCol="lpep_pickup_datetime"))
     context.log.info(f'Data upload has completed.')
 
     dataView = duckdb.executeQuery(duckConn, duckdb.select_table( schema="bronze" ,table=metadata['table_name'][0]))
@@ -55,7 +54,7 @@ def raw_yellow_taxi_trip_records(context: AssetExecutionContext, duckdb: DuckDBU
     metadata = IngestionResource(duckConn, duckdb).get_raw_parquet_data(source=sourceName, yearRange=config)
 
     context.log.info(f'Send data to datalake')
-    duckdb.executeQuery(duckConn, duckdb.copy_to_minio(schema="bronze" ,table=metadata["table_name"][0]))
+    duckdb.executeQuery(duckConn, duckdb.copy_to_minio(schema="bronze" ,table=metadata["table_name"][0], timestampCol="tpep_pickup_datetime"))
     context.log.info(f'Data upload has completed.')
 
     dataView = duckdb.executeQuery(duckConn, duckdb.select_table( schema="bronze" ,table=metadata["table_name"][0]))
@@ -85,7 +84,7 @@ def raw_taxi_zones(context: AssetExecutionContext, duckdb: DuckDBUtils ):
     metadata = IngestionResource(duckConn, duckdb).get_raw_csv_data(source=sourceName)
 
     context.log.info(f'Send data to datalake')
-    duckdb.executeQuery(duckConn, duckdb.copy_to_minio(schema="bronze" ,table=metadata['table_name'][0]))
+    duckdb.executeQuery(duckConn, duckdb.copy_to_minio(schema="bronze" ,table=metadata['table_name'][0], timestampCol="CURRENT_TIMESTAMP"))
     context.log.info(f'Data upload has completed.')
 
     dataView = duckdb.executeQuery(duckConn, duckdb.select_table( schema="bronze" ,table=metadata['table_name'][0]))

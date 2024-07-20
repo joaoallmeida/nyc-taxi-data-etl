@@ -19,8 +19,6 @@ WITH stg_yellow_trips AS (
         ,total_amount
         ,COALESCE(airport_fee,0) as fee
         ,COALESCE(congestion_surcharge,0) AS congestion_surcharge
-        ,YEAR(tpep_pickup_datetime) AS year_ref
-        ,MONTH(tpep_pickup_datetime) AS month_ref
     FROM {{ source('bronze','raw_yellow_taxi_trip_records') }}
     WHERE 1=1
     AND YEAR(tpep_pickup_datetime) >= 2020
@@ -46,8 +44,6 @@ stg_green_trips AS (
         , total_amount
         , COALESCE(ehail_fee,0) as fee
         , COALESCE(congestion_surcharge,0) AS congestion_surcharge
-        , YEAR(lpep_pickup_datetime) as year_ref
-        , MONTH(lpep_pickup_datetime) as month_ref
     FROM {{ source('bronze','raw_green_taxi_trip_records') }}
     WHERE 1=1
     AND YEAR(lpep_pickup_datetime) >= 2020
@@ -82,6 +78,5 @@ SELECT DISTINCT
         , total_amount
         , fee
         , congestion_surcharge
-        , year_ref
-        , month_ref
+        , CURRENT_TIMESTAMP AS loaded_at
 FROM stg_fat_trips

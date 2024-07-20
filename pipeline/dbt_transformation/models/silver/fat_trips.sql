@@ -39,9 +39,8 @@ SELECT  DISTINCT
         , A.pickup_datetime
         , A.dropoff_datetime
         , A.duration_trip
-        , A.year_ref
-        , A.month_ref
         , CURRENT_TIMESTAMP AS created_at
+        , loaded_at
 FROM stg_fat_trips A
 INNER JOIN dim_payments B   ON A.payment_id = B.payment_id
 INNER JOIN dim_ratecodes C  ON A.ratecode_id = C.ratecode_id

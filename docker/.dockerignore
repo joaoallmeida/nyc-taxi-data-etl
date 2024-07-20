@@ -28,7 +28,11 @@ coverage.xml
 .pytest_cache
 .hypothesis
 
-
 *log*
 *.md
 .git
+
+target/
+dbt_packages/
+logs/
+*lock*

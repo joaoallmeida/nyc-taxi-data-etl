@@ -35,50 +35,49 @@ models:
     staging:
       stg_taxi_trips:
         +materialized: table
-        +on_table_exists: drop
         +schema: staging
-        +post-hook:
-          - "{{ export_to_minio('staging','stg_taxi_trips') }}"
+        +on_table_exists: replace
+
     silver:
       fat_trips:
-        +materialized: table
-        +on_table_exists: drop
+        +materialized: "{{ 'incremental' if target.name == 'prod' else 'table'  }}"
+        +unique_key: fat_key
         +schema: silver
         +post-hook:
-          - "{{ export_to_minio('silver','fat_trips') }}"
+          - "{{ export_to_minio('silver','fat_trips', 'pickup_datetime') }}"
       dim_payments:
-        +materialized: table
+        +materialized: "{{ 'incremental' if target.name == 'prod' else 'table'  }}"
         +schema: silver
-        +on_table_exists: drop
+        +unique_key: payment_id
         +post-hook:
-          - "{{ export_to_minio('silver','dim_payments') }}"
+          - "{{ export_to_minio('silver','dim_payments', 'created_at') }}"
       dim_ratecodes:
-        +materialized: table
+        +materialized: "{{ 'incremental' if target.name == 'prod' else 'table'  }}"
         +schema: silver
-        +on_table_exists: drop
+        +unique_key: ratecode_id
         +post-hook:
-          - "{{ export_to_minio('silver','dim_ratecodes') }}"
+          - "{{ export_to_minio('silver','dim_ratecodes', 'created_at') }}"
       dim_services:
-        +materialized: table
+        +materialized: "{{ 'incremental' if target.name == 'prod' else 'table'  }}"
         +schema: silver
-        +on_table_exists: drop
+        +unique_key: service_id
         +post-hook:
-          - "{{ export_to_minio('silver','dim_services') }}"
+          - "{{ export_to_minio('silver','dim_services', 'created_at') }}"
       dim_zones:
-        +materialized: table
+        +materialized: "{{ 'incremental' if target.name == 'prod' else 'table'  }}"
         +schema: silver
-        +on_table_exists: drop
+        +unique_key: location_id
         +post-hook:
-          - "{{ export_to_minio('silver','dim_zones') }}"
+          - "{{ export_to_minio('silver','dim_zones', 'created_at') }}"
       dim_vendors:
-        +materialized: table
+        +materialized: "{{ 'incremental' if target.name == 'prod' else 'table'  }}"
         +schema: silver
-        +on_table_exists: drop
+        +unique_key: vendor_id
         +post-hook:
-          - "{{ export_to_minio('silver','dim_vendors') }}"
+          - "{{ export_to_minio('silver','dim_vendors', 'created_at') }}"
       dim_calendar:
-        +materialized: table
+        +materialized: "{{ 'incremental' if target.name == 'prod' else 'table'  }}"
         +schema: silver
-        +on_table_exists: drop
+        +unique_key: date_key
         +post-hook:
-          - "{{ export_to_minio('silver','dim_calendar') }}"
+          - "{{ export_to_minio('silver','dim_calendar', 'CURRENT_TIMESTAMP') }}"

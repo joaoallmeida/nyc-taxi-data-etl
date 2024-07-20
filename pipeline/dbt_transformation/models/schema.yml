@@ -81,15 +81,12 @@ models:
       - name: fee
         data_type: DOUBLE
         description: $1.25 for pick up only at LaGuardia and John F. Kennedy Airports.
-      - name: year_ref
-        data_type: INTEGER
-        description: Year reference.
-      - name: month_ref
-        data_type: INTEGER
-        description: Month reference.
       - name: created_at
         data_type: TIMESTAMP
         description: Day and time of table creation.
+      - name: loded_at
+        data_type: TIMESTAMP
+        description: Day and time of table load.
 
   - name: dim_payments
     description: The Payment types.
