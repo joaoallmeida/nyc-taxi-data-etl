@@ -5,12 +5,12 @@ models:
     description: Yellow and Green taxis are traditionally hailed by signaling to a driver who is on duty and seeking a passenger.
     columns:
       - name: fat_key
-        data_type: INTEGER
+        data_type: VARCHAR
         description: Fat surrogate key.
         data_tests:
           - not_null
       - name: vendor_key
-        data_type: INTEGER
+        data_type: VARCHAR
         description: A surrogate code indicating the TPEP provider that provided the record.
         data_tests:
           - not_null
@@ -23,34 +23,37 @@ models:
       - name: passenger_count
         data_type: BIGINT
         description: The number of passengers in the vehicle. This is a driver-entered value.
+      - name: trip_duration
+        data_type: BIGINT
+        description: The duration in minutes of the trip.
       - name: trip_distance
         data_type: DOUBLE
         description: The elapsed trip distance in miles reported by the taximeter.
       - name: trip_distance_km
         data_type: DOUBLE
         description: The elapsed trip distance in kilometers reported by the taximeter.
-      - name: pu_location_key
-        data_type: INTEGER
+      - name: pu_zone_key
+        data_type: VARCHAR
         description: TLC Taxi Zone in which the taximeter was engaged
         data_tests:
           - not_null
-      - name: do_location_key
-        data_type: INTEGER
+      - name: do_zone_key
+        data_type: VARCHAR
         description: TLC Taxi Zone in which the taximeter was disengaged
         data_tests:
           - not_null
       - name: ratecode_key
-        data_type: BIGINT
+        data_type: VARCHAR
         description: The surrogate rate code in effect at the end of the trip.
         data_tests:
           - not_null
       - name: payment_key
-        data_type: INTEGER
+        data_type: VARCHAR
         description: A surrogate code signifying how the passenger paid for the trip.
         data_tests:
           - not_null
       - name: service_key
-        data_type: INTEGER
+        data_type: VARCHAR
         description: Surrogate for green or yellow taxi service.
         data_tests:
           - not_null
@@ -170,15 +173,15 @@ models:
         data_type: TIMESTAMP
         description: Day and time of table creation.
 
-  - name: dim_zones
+  - name: dim_pu_zones
     description: The zone types.
     columns:
-      - name: zone_key
+      - name: pu_zone_key
         data_type: VARCHAR
-        description: The zone surrogate key.
+        description: The pickup zone surrogate key.
         data_tests:
           - unique
-      - name: location_id
+      - name: pu_location_id
         data_type: INTEGER
         data_tests:
           - not_null
@@ -188,6 +191,34 @@ models:
         data_type: VARCHAR
       - name: service_zone
         data_type: VARCHAR
+      - name: loded_at
+        data_type: TIMESTAMP
+        description: Day and time of loaded table.
+      - name: created_at
+        data_type: TIMESTAMP
+        description: Day and time of table creation.
+
+  - name: dim_do_zones
+    description: The zone types.
+    columns:
+      - name: do_zone_key
+        data_type: VARCHAR
+        description: The dropoff zone surrogate key.
+        data_tests:
+          - unique
+      - name: do_location_id
+        data_type: INTEGER
+        data_tests:
+          - not_null
+      - name: borough
+        data_type: VARCHAR
+      - name: zone
+        data_type: VARCHAR
+      - name: service_zone
+        data_type: VARCHAR
+      - name: loded_at
+        data_type: TIMESTAMP
+        description: Day and time of loaded table.
       - name: created_at
         data_type: TIMESTAMP
         description: Day and time of table creation.

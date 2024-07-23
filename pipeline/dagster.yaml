@@ -1,12 +1,6 @@
 telemetry:
   enabled: false
 
-local_artifact_storage:
-  module: dagster.core.storage.root
-  class: LocalArtifactStorage
-  config:
-    base_dir: "/opt/dagster/local/"
-
 compute_logs:
   module: dagster.core.storage.noop_compute_log_manager
   class: NoOpComputeLogManager

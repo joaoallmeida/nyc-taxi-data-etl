@@ -37,6 +37,10 @@ models:
         +materialized: table
         +schema: staging
         +on_table_exists: replace
+      stg_taxi_zones:
+        +materialized: table
+        +schema: staging
+        +on_table_exists: replace
 
     silver:
       fat_trips:
@@ -63,12 +67,18 @@ models:
         +unique_key: service_id
         +post-hook:
           - "{{ export_to_minio('silver','dim_services', 'created_at') }}"
-      dim_zones:
+      dim_pu_zones:
         +materialized: "{{ 'incremental' if target.name == 'prod' else 'table'  }}"
         +schema: silver
-        +unique_key: location_id
+        +unique_key: pu_location_id
         +post-hook:
-          - "{{ export_to_minio('silver','dim_zones', 'created_at') }}"
+          - "{{ export_to_minio('silver','dim_pu_zones', 'created_at') }}"
+      dim_do_zones:
+        +materialized: "{{ 'incremental' if target.name == 'prod' else 'table'  }}"
+        +schema: silver
+        +unique_key: do_location_id
+        +post-hook:
+          - "{{ export_to_minio('silver','dim_do_zones', 'created_at') }}"
       dim_vendors:
         +materialized: "{{ 'incremental' if target.name == 'prod' else 'table'  }}"
         +schema: silver
