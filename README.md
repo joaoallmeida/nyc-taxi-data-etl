@@ -14,9 +14,7 @@ This project showcases an ETL data pipeline built with **DBT**, **DuckDB**, **Da
 
 ## 🛠️ Development
 
-### Setup
-
-#### Requirements
+### Requirements
 
 The project requires:
 
@@ -26,7 +24,7 @@ The project requires:
 * Linux (Recommended)
 * Minio Bucket (To push data) and Secrets that has write access to the bucket
 
-#### Environment Variables
+### Environment Variables
 
 After creating the bucket and secrets, copy these values ​​and create the ```.env``` file in your project for local test.
 
@@ -44,13 +42,11 @@ To build the docker containers you need to change the values ​​of the minio 
 
 ## ⚙️ Build
 
-### Run
-
 After filling the ```.env``` and ```docker.env``` files with the new values, you can perform the following steps:
 
-* ```make setup```: To install the dependencies
-* ```make build```: Build the docker image and containers
-* ```make destroy```: Remove all docker image and containers
+* ```make setup```: To install the dependencies.
+* ```make build```: Build the docker image and containers.
+* ```make destroy```: Remove all docker image and containers.
 
 If you want execute this project on dev mode, do the following in your terminal:
 
@@ -64,7 +60,7 @@ The dagster is the orchestration tool used on this project. It's divided into tw
 
 You can materialize these groups **individually** (recommended) depending on the range of years you want to extract. To materialize dagster assets, do the following:
 
-<video src="./docs/video/demo_dagster.mp4"  controls></video>
+![demo](./docs/video/demo_dagster.gif)
 
 **Obs**: Just the *Bronze* group need pass a parameter to init the process, *Silver* group you just click on **Materialize all**
 
