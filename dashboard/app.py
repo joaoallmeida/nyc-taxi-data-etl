@@ -189,7 +189,7 @@ trips_by_zones_pu = getData(f'''select
                                         count(*) as total_trips
                                         , b.zone as pickup_zone
                                 from silver.fat_trips a
-                                left join silver.dim_zones b on a.pu_location_key = b.zone_key
+                                left join silver.dim_pu_zones b on a.pu_zone_key = b.pu_zone_key
                                 inner join silver.dim_calendar c on a.pickup_datetime::date = c.date
                                 inner join silver.dim_services d on a.service_key = d.service_key
                                 inner join silver.dim_vendors  e on a.vendor_key = e.vendor_key
@@ -202,7 +202,7 @@ trips_by_zones_do = getData(f'''select
                                     count(*) as total_trips
                                     , b.zone as dropoff_zone
                                 from silver.fat_trips a
-                                left join silver.dim_zones b on a.do_location_key = b.zone_key
+                                left join silver.dim_do_zones b on a.do_zone_key = b.do_zone_key
                                 inner join silver.dim_calendar c on a.pickup_datetime::date = c.date
                                 inner join silver.dim_services d on a.service_key = d.service_key
                                 inner join silver.dim_vendors  e on a.vendor_key = e.vendor_key
@@ -251,7 +251,7 @@ with col6:
 st.divider()
 
 st.markdown("<h3 style='text-align: center;'>Monthly Trip Count by Service</h3>", unsafe_allow_html=True)
-st.plotly_chart(px.area(trips_by_services, y='total_trip', x='year_month', color='service_desc', labels={"year_month":"Year - Month","total_trip":"Trips"}, color_discrete_map={ 'YELLOW': '#FFF449', 'GREEN': '#75FF49' }, markers=True), use_container_width=True, config=config)
+st.plotly_chart(px.line(trips_by_services, y='total_trip', x='year_month', color='service_desc', labels={"year_month":"Year - Month","total_trip":"Trips"}, color_discrete_map={ 'YELLOW': '#FFF449', 'GREEN': '#75FF49' }, markers=True), use_container_width=True, config=config)
 
 col1, col2 = st.columns(2)
 
