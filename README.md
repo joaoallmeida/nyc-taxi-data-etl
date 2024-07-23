@@ -42,6 +42,8 @@ To build the docker containers you need to change the values ​​of the minio 
 
 ## ⚙️ Build
 
+### Deploy
+
 After filling the ```.env``` and ```docker.env``` files with the new values, you can perform the following steps:
 
 * ```make setup```: To install the dependencies.
@@ -52,7 +54,12 @@ If you want execute this project on dev mode, do the following in your terminal:
 
 * ```cd pipeline/```: Enter on pipeline path.
 * ```dagster dev```: Run the dagster command.
-* ```http://127.0.0.1:3000```: Open this address in your browser.
+
+### Access The Services
+
+* Minio: ```http://127.0.0.1:9000```
+* Dagster: ```http://127.0.0.1:4000```
+* Streamlit: ```http://127.0.0.1:8501```
 
 ## 🪄 Dagster - Orchestration
 
@@ -68,7 +75,7 @@ You can materialize these groups **individually** (recommended) depending on the
 
 The dashboard is created using **Streamlit**, it is a python library used to create interactive visualizations. This app uses the silver tier data, stored in DuckDB.
 
-To access the dashboard using the docker container, simply follow this address in your browser ```http://127.0.0.1:8501```, if you use dev mode, do the following:
+if you use dev mode, do the following:
 
 * ```streamlit run dashboard/app.py/```: Run this command in your terminal to instantiate the dash.
 
