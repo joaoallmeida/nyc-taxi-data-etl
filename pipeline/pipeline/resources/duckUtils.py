@@ -29,8 +29,8 @@ class DuckDBUtils(ConfigurableResource):
             SET http_retries=5;
             SET http_retry_wait_ms=500;
             SET s3_url_style='path';
-            SET s3_access_key_id='{os.environ['ACCESS_KEY']}';
-            SET s3_secret_access_key='{os.environ['SECRET_ACCESS']}';
+            SET s3_access_key_id='{os.environ['ACCESS_KEY_MINIO']}';
+            SET s3_secret_access_key='{os.environ['SECRET_ACCESS_MINIO']}';
             SET s3_endpoint='{os.environ['ENDPOINT_MINIO']}';
             SET preserve_insertion_order = false;
             SET memory_limit = '10GB';

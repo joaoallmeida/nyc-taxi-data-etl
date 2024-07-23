@@ -1,9 +1,9 @@
-version: '3'
+name: nyc-data-pipeline
 
 services:
   dagster:
     image: dagster
-    container_name: dagster
+    container_name: nyc_dagster
     ports:
       - 4000:4000
     env_file:
@@ -14,23 +14,18 @@ services:
       - dagster-net
     restart: on-failure
 
-  # minio:
-  #   image: minio/minio:latest
-  #   container_name: minio
-  #   hostname: minio
-  #   ports:
-  #     - "9000:9000"
-  #     - "9001:9001"
-  #   volumes:
-  #     - minio_storage:/data
-  #   environment:
-  #     MINIO_ACCESS_KEY: minio_access_key
-  #     MINIO_SECRET_KEY: minio_secret_key
-  #   command: server --console-address ":9001" /data
+  minio:
+    image: minio/minio:latest
+    container_name: nyc_minio
+    hostname: minio
+    ports:
+      - 9000:9000
+      - 9001:9001
+    command: server --console-address ":9001" /data
 
   streamlit:
     image: streamlit:latest
-    container_name: streamlit
+    container_name: nyc_streamlit
     environment:
       DUCKDB_PATH: /data
     volumes:
