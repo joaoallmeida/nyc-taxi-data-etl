@@ -1,5 +1,5 @@
 build:
-	docker build --no-cache -f docker/code.Dockerfile -t dagster .
+	docker build --no-cache -f docker/pipeline.Dockerfile -t dagster .
 	docker build --no-cache -f docker/streamlit.Dockerfile -t streamlit .
 	docker compose -f docker/docker-compose.yml up -d
 

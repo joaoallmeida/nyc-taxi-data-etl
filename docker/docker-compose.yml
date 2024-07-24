@@ -11,17 +11,8 @@ services:
     volumes:
       - ${PWD}/data:/opt/dagster/app/data
     networks:
-      - dagster-net
+      - nyc_network
     restart: on-failure
-
-  minio:
-    image: minio/minio:latest
-    container_name: nyc_minio
-    hostname: minio
-    ports:
-      - 9000:9000
-      - 9001:9001
-    command: server --console-address ":9001" /data
 
   streamlit:
     image: streamlit:latest
@@ -32,10 +23,12 @@ services:
       - ${PWD}/data:/data
     ports:
       - 8501:8501
+    networks:
+      - nyc_network
     depends_on:
       - dagster
     restart: on-failure
 
 networks:
-  dagster-net:
+  nyc_network:
     driver: bridge

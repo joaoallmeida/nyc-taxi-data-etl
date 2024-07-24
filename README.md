@@ -34,8 +34,8 @@ SECRET_ACCESS_MINIO=12345 # Minio Secret Key
 ACCESS_KEY_MINIO=6789 # Minio Access Secret Key
 ENVIRONMENT=dev # Development Environment
 DUCKDB_PATH=/tmp # Destination to save file .db
-MINIO_BUCKET_OUT=s3://tlc/ # Refined files output
-MINIO_PATH_BRONZE=s3://tlc/bronze # Raw files output
+MINIO_BUCKET_OUT=s3://nyc/ # Refined files output
+MINIO_PATH_BRONZE=s3://nyc/bronze # Raw files output
 ```
 
 To build the docker containers you need to change the values ​​of the minio env variables of the ```docker.env``` file, located in ```docker/``` path.
@@ -57,11 +57,10 @@ If you want execute this project on dev mode, do the following in your terminal:
 
 ### Access The Services
 
-* Minio: ```http://127.0.0.1:9000```
 * Dagster: ```http://127.0.0.1:4000```
 * Streamlit: ```http://127.0.0.1:8501```
 
-## 🪄 Dagster - Orchestration
+## 🪄 Dagster - Orchestrationj
 
 The dagster is the orchestration tool used on this project. It's divided into two groups, **Bronze** and **Silver**, the groups are responsible for data ingestion and refinement.
 
